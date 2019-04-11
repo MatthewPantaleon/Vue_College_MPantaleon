@@ -16,12 +16,19 @@ use Illuminate\Http\Request;
 Route::post('login', 'API\PassportController@login');
 Route::post('register', 'API\PassportController@register');
 
+//make courses viewable without auth
+Route::resource('courses', 'API\CourseController')->only([
+	'index', 'show'
+]);
+
+
+
 Route::middleware('auth:api')->group(function () {
     Route::get('user', 'API\PassportController@user');
     Route::get('logout', 'API\PassportController@logout');
 
     Route::resource('courses', 'API\CourseController')->except([
-        'create', 'edit'
+        'create', 'edit', 'index', 'show'
     ]);
     Route::resource('students', 'API\StudentController')->except([
         'create', 'edit'

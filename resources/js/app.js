@@ -25,6 +25,7 @@ import VueRouter from 'vue-router';
 
 //Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 import WelcomeComponent from './components/WelcomeComponent.vue';
+import ViewCourses from './components/courses/ViewCoursesComponent.vue';
 //Vue.component('welcome-component', require('./components/WelcomeComponent.vue'));
 
 
@@ -40,8 +41,11 @@ const routes = [
 		path: '/',
 		components:{
 			welcomeComponent: WelcomeComponent
-		},
-		name: "welcome"
+		}
+	},
+	{
+		path: '/courses',
+		component: ViewCourses,
 	}
 	
 	
