@@ -8,6 +8,7 @@ use App\Doctor;
 use App\Patient;
 use App\Enrolment;
 use App\Http\Controllers\Controller;
+use DB;
 
 class EnrolmentController extends Controller
 {
@@ -101,4 +102,18 @@ class EnrolmentController extends Controller
 
         return response()->json(['message' => 'Successfully deleted'], 200);
     }
+	
+	//returns the enum values for the status column for the enrolments table
+	public function getEnum(){
+		
+		//gets the datatype for the status column as a string
+		$enumString = DB::select(DB::raw('SHOW COLUMNS FROM enrolments WHERE Field = "status"'))[0]->Type;
+		$enumArray = array();
+		
+		//uses regex to get all values in between " ' " and stores them in an array
+		preg_match_all('/\'(.*?)\'/', $enumString, $enumArray);
+		
+		//return second array to be used as select options
+		return $enumArray[1];
+	}
 }

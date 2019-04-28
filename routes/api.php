@@ -36,4 +36,7 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('enrolments', 'API\EnrolmentController')->except([
         'create', 'edit'
     ]);
+	
+	//route to retrieve statuses
+	Route::get('statuses', 'API\EnrolmentController@getEnum')->name('enrolments.statuses');
 });

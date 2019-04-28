@@ -26,6 +26,12 @@ import VueRouter from 'vue-router';
 //Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 import WelcomeComponent from './components/WelcomeComponent.vue';
 import ViewCourses from './components/courses/ViewCoursesComponent.vue';
+import LoginComponent from './components/LoginComponent.vue';
+import RegisterComponent from './components/RegisterComponent.vue';
+
+import CreateEnrolmentComponent from './components/enrolments/CreateEnrolmentComponent.vue';
+import EnrolmentsComponent from './components/enrolments/EnrolmentsComponent.vue';
+import ViewEnrolmenComponent from './components/enrolments/ViewEnrolmentComponent.vue';
 //Vue.component('welcome-component', require('./components/WelcomeComponent.vue'));
 
 
@@ -46,9 +52,30 @@ const routes = [
 	{
 		path: '/courses',
 		component: ViewCourses,
+	},
+	{
+		path: '/login',
+		component: LoginComponent
+	},
+	{
+		path: '/register',
+		component: RegisterComponent
+	},
+	{
+		path: '/createEnrolment',
+		component: CreateEnrolmentComponent
+	},
+	{
+		path: '/enrolments',
+		component: EnrolmentsComponent
+	},
+	{
+		path: '/viewEnrolment/:id',
+		component: ViewEnrolmenComponent,
+		name: "viewEnrolment",
+		props: true
 	}
-	
-	
+
 ];
 
 const router = new VueRouter({

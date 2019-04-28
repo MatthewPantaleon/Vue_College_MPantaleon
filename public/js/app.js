@@ -1754,6 +1754,135 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LoginComponent.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/LoginComponent.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  mounted: function mounted() {
+    console.log('Login Mounted');
+  },
+  data: function data() {
+    return {
+      email: "",
+      password: ""
+    };
+  },
+  methods: {
+    loginSubmit: function loginSubmit() {
+      var that = this;
+      console.log("You have logged in");
+      console.log(that.email);
+      console.log(that.password);
+      $.ajax({
+        method: "POST",
+        url: "api/login",
+        data: {
+          email: that.email,
+          password: that.password
+        },
+        dataType: "json",
+        success: function success(response) {
+          console.log(response);
+          localStorage.setItem('accessToken', response.token);
+        },
+        error: function error(response) {
+          console.log(response);
+        }
+      });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RegisterComponent.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/RegisterComponent.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  mounted: function mounted() {
+    console.log('Register Mounted');
+  },
+  data: function data() {
+    return {
+      name: "",
+      email: "",
+      password: ""
+    };
+  },
+  methods: {
+    registerSubmit: function registerSubmit() {
+      var that = this;
+      console.log(that.name);
+      console.log(that.email);
+      console.log(that.password);
+      $.ajax({
+        method: 'POST',
+        url: "api/register",
+        data: {
+          name: that.name,
+          email: that.email,
+          password: that.password
+        },
+        dataType: 'json',
+        success: function success(response) {
+          console.log(response);
+        },
+        error: function error(response) {
+          console.log(response);
+        }
+      });
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/WelcomeComponent.vue?vue&type=script&lang=js&":
 /*!***************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/WelcomeComponent.vue?vue&type=script&lang=js& ***!
@@ -1852,8 +1981,6 @@ __webpack_require__.r(__webpack_exports__);
       $.ajax({
         url: "api/courses",
         method: "GET",
-        data: "rghdtrh",
-        headers: {},
         success: function success(response) {
           console.log(response);
           that.courses = response;
@@ -1862,6 +1989,367 @@ __webpack_require__.r(__webpack_exports__);
           console.log(response);
         }
       });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/enrolments/CreateEnrolmentComponent.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/enrolments/CreateEnrolmentComponent.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  mounted: function mounted() {
+    var that = this;
+    console.log('CreateEnrolment Mounted'); //get corses and students
+
+    that.getCourses();
+    that.getStudents();
+    that.getStatuses();
+  },
+  data: function data() {
+    return {
+      courses: [],
+      students: [],
+      statuses: [],
+      token: localStorage.getItem('accessToken'),
+      name: "",
+      time: "",
+      status: "",
+      courese_id: "",
+      student_id: ""
+    };
+  },
+  methods: {
+    test: function test() {
+      console.log("TETS");
+    },
+    getCourses: function getCourses() {
+      var that = this;
+      $.ajax({
+        method: 'GET',
+        url: 'api/courses',
+        success: function success(response) {
+          console.log(response);
+          that.courses = response;
+        },
+        error: function error(reponse) {
+          console.log(response);
+        }
+      });
+    },
+    getStudents: function getStudents() {
+      var that = this;
+      $.ajax({
+        method: 'GET',
+        url: "api/students",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken")
+        },
+        success: function success(response) {
+          console.log(response);
+          that.students = response;
+        },
+        error: function error(response) {
+          console.log(response);
+        }
+      });
+    },
+    getStatuses: function getStatuses() {
+      var that = this;
+      $.ajax({
+        method: 'GET',
+        url: "api/statuses",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken")
+        },
+        success: function success(response) {
+          console.log(response);
+          that.statuses = response;
+        },
+        error: function error(response) {
+          console.log(response);
+        }
+      });
+    },
+    submitEnrolement: function submitEnrolement() {}
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/enrolments/EnrolmentsComponent.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/enrolments/EnrolmentsComponent.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  mounted: function mounted() {
+    var that = this;
+    console.log('View Enrolments Mounted');
+    that.getEnrolments();
+  },
+  data: function data() {
+    return {
+      enrolments: [],
+      selectedEnrolment: {},
+      token: localStorage.getItem("accessToken"),
+      pageSize: 15,
+      pageNumber: 1
+    };
+  },
+  methods: {
+    getEnrolments: function getEnrolments() {
+      var that = this;
+      $.ajax({
+        method: 'GET',
+        url: 'api/enrolments',
+        headers: {
+          Authorization: "Bearer " + that.token
+        },
+        success: function success(response) {
+          console.log(response);
+          that.enrolments = response;
+          that.selectedEnrolment = response[0];
+          $(document).ready(function () {
+            $("#" + that.pageNumber).addClass("btn-primary").removeClass("btn-secondary");
+            $("#" + that.selectedEnrolment.id + "-enrolment").removeClass("btn-secondary").addClass("btn-primary").html("Selected");
+          });
+        },
+        error: function error(response) {
+          console.log(response);
+        }
+      });
+    },
+    nextPage: function nextPage(p) {
+      var that = this;
+      that.pageNumber = p;
+      $(".pageButtons").removeClass("btn-primary").addClass("btn-secondary");
+      $("#" + that.pageNumber).addClass("btn-primary").removeClass("btn-secondary");
+      $(document).ready(function () {
+        $("#" + that.selectedEnrolment.id + "-enrolment").removeClass("btn-secondary").addClass("btn-primary").html("Selected");
+      });
+    },
+    checkIndex: function checkIndex(index) {
+      var that = this;
+
+      if (that.enrolments[index - 1 + that.pageSize * (that.pageNumber - 1)] != undefined) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    returnArrayIndex: function returnArrayIndex(index) {
+      var that = this;
+      return that.enrolments[index - 1 + that.pageSize * (that.pageNumber - 1)];
+    },
+    viewEnrolment: function viewEnrolment(index) {
+      var that = this;
+      that.selectedEnrolment = that.returnArrayIndex(index);
+      $(".viewButtons").removeClass("btn-primary").addClass("btn-secondary").html("View");
+      $("#" + that.selectedEnrolment.id + "-enrolment").removeClass("btn-secondary").addClass("btn-primary").html("Selected");
+    },
+    deleteEnrolment: function deleteEnrolment(id) {
+      var that = this;
+
+      if (!confirm("Delete Enrolment No#: " + id)) {
+        return;
+      }
+
+      var realIndex = that.enrolments.findIndex(function (x) {
+        return x.id === id;
+      });
+      that.enrolments.splice(realIndex, 1);
+      that.selectedEnrolment = {};
+      $.ajax({
+        method: 'DELETE',
+        url: 'api/enrolments/' + id,
+        headers: {
+          Authorization: "Bearer " + that.token
+        },
+        success: function success(response) {
+          console.log(response);
+          alert(response.message);
+        },
+        error: function error(response) {
+          console.log(response);
+        }
+      });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/enrolments/ViewEnrolmentComponent.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/enrolments/ViewEnrolmentComponent.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  mounted: function mounted() {
+    var that = this;
+    console.log('Enrolment View Mounted');
+  },
+  props: {
+    id: {
+      type: Number
+    }
+  },
+  data: function data() {
+    return {
+      enrolment: {},
+      enId: 0
+    };
+  },
+  methods: {
+    getEnrolment: function getEnrolment() {
+      var that = this;
     }
   }
 });
@@ -36895,6 +37383,203 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LoginComponent.vue?vue&type=template&id=4d2414bf&":
+/*!*****************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/LoginComponent.vue?vue&type=template&id=4d2414bf& ***!
+  \*****************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "card" }, [
+    _c("div", { staticClass: "card-header" }, [_vm._v("I am the welcome")]),
+    _vm._v(" "),
+    _c("div", { staticClass: "card-body" }, [
+      _c(
+        "form",
+        {
+          staticClass: "form",
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.loginSubmit()
+            }
+          }
+        },
+        [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.email,
+                expression: "email"
+              }
+            ],
+            attrs: { type: "text", name: "email" },
+            domProps: { value: _vm.email },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.email = $event.target.value
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.password,
+                expression: "password"
+              }
+            ],
+            attrs: { type: "password", name: "password" },
+            domProps: { value: _vm.password },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.password = $event.target.value
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c(
+            "button",
+            { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+            [_vm._v("Submit")]
+          )
+        ]
+      )
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RegisterComponent.vue?vue&type=template&id=51f045bf&":
+/*!********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/RegisterComponent.vue?vue&type=template&id=51f045bf& ***!
+  \********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "card" }, [
+    _c("div", { staticClass: "card-header" }, [_vm._v("I am the welcome")]),
+    _vm._v(" "),
+    _c("div", { staticClass: "card-body" }, [
+      _c(
+        "form",
+        {
+          staticClass: "form",
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.registerSubmit()
+            }
+          }
+        },
+        [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.name,
+                expression: "name"
+              }
+            ],
+            attrs: { type: "text", name: "name" },
+            domProps: { value: _vm.name },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.name = $event.target.value
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.email,
+                expression: "email"
+              }
+            ],
+            attrs: { type: "text", name: "email" },
+            domProps: { value: _vm.email },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.email = $event.target.value
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.password,
+                expression: "password"
+              }
+            ],
+            attrs: { type: "password", name: "password" },
+            domProps: { value: _vm.password },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.password = $event.target.value
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("button", { attrs: { type: "submit" } }, [_vm._v("Submit")])
+        ]
+      )
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/WelcomeComponent.vue?vue&type=template&id=1974e6b4&":
 /*!*******************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/WelcomeComponent.vue?vue&type=template&id=1974e6b4& ***!
@@ -37021,6 +37706,369 @@ var staticRenderFns = [
     ])
   }
 ]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/enrolments/CreateEnrolmentComponent.vue?vue&type=template&id=0e56f38c&":
+/*!**************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/enrolments/CreateEnrolmentComponent.vue?vue&type=template&id=0e56f38c& ***!
+  \**************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "card" }, [
+    _c("div", { staticClass: "card-header" }, [_vm._v("I am the welcome")]),
+    _vm._v(" "),
+    _c("div", { staticClass: "card-body" }, [
+      _c(
+        "form",
+        {
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.test()
+            }
+          }
+        },
+        [
+          _c("input", { attrs: { type: "text", name: "date" } }),
+          _vm._v(" "),
+          _c("input", { attrs: { type: "text", name: "time" } }),
+          _vm._v(" "),
+          _c(
+            "select",
+            { attrs: { name: "status" } },
+            [
+              _c("option", [_vm._v("Select Status")]),
+              _vm._v(" "),
+              _vm._l(_vm.statuses, function(s) {
+                return _c("option", { attrs: { value: "s" } }, [
+                  _vm._v(_vm._s(s))
+                ])
+              })
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "select",
+            { attrs: { name: "course_id" } },
+            [
+              _c("option", { attrs: { value: "" } }, [_vm._v("Select Course")]),
+              _vm._v(" "),
+              _vm._l(_vm.courses, function(c) {
+                return _c("option", { attrs: { value: "c.id" } }, [
+                  _vm._v(_vm._s(c.title))
+                ])
+              })
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "select",
+            { attrs: { name: "student_id" } },
+            [
+              _c("option", { attrs: { value: "" } }, [
+                _vm._v("Select Student")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.students, function(s) {
+                return _c("option", { attrs: { value: "s.id" } }, [
+                  _vm._v(_vm._s(s.name))
+                ])
+              })
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c("button", [_vm._v("SUBMIT")])
+        ]
+      )
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/enrolments/EnrolmentsComponent.vue?vue&type=template&id=692a9599&":
+/*!*********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/enrolments/EnrolmentsComponent.vue?vue&type=template&id=692a9599& ***!
+  \*********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "card" }, [
+    _c("div", { staticClass: "card-header" }, [_vm._v("Enrolments")]),
+    _vm._v(" "),
+    _c("div", { staticClass: "card-body" }, [
+      _c("div", { staticClass: "row" }, [
+        _c(
+          "div",
+          { staticClass: "col" },
+          _vm._l(Math.ceil(_vm.enrolments.length / _vm.pageSize), function(p) {
+            return _c(
+              "button",
+              {
+                staticClass: "btn btn-secondary pageButtons ml-2",
+                attrs: { id: p },
+                on: {
+                  click: function($event) {
+                    return _vm.nextPage(p)
+                  }
+                }
+              },
+              [_vm._v(_vm._s(p))]
+            )
+          }),
+          0
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-8" }, [
+          _c("table", { staticClass: "table table-hover table-striped mt-4" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _vm.enrolments.length > 0
+              ? _c(
+                  "tbody",
+                  _vm._l(_vm.pageSize, function(i) {
+                    return _vm.checkIndex(i)
+                      ? _c("tr", { key: _vm.returnArrayIndex(i).id }, [
+                          _c("th", { attrs: { scope: "row" } }, [
+                            _vm._v(_vm._s(_vm.returnArrayIndex(i).id))
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(_vm._s(_vm.returnArrayIndex(i).course.title))
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(_vm._s(_vm.returnArrayIndex(i).student.name))
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-secondary viewButtons",
+                                attrs: {
+                                  id: _vm.returnArrayIndex(i).id + "-enrolment"
+                                },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.viewEnrolment(i)
+                                  }
+                                }
+                              },
+                              [_vm._v("View")]
+                            )
+                          ])
+                        ])
+                      : _vm._e()
+                  }),
+                  0
+                )
+              : _c("tbody", [_vm._m(1)])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-4" }, [
+          Object.keys(_vm.selectedEnrolment).length != 0
+            ? _c("span", [
+                _c("div", { staticClass: "card mt-4" }, [
+                  _c("div", { staticClass: "card-header" }, [
+                    _c("h5", { staticClass: "card-title" }, [
+                      _vm._v(
+                        "Showing Enrolment No#: " +
+                          _vm._s(_vm.selectedEnrolment.id)
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card-body" }, [
+                    _c("ul", { staticClass: "list-group list-group-flush" }, [
+                      _c("li", { staticClass: "list-group-item" }, [
+                        _c("span", { staticClass: "font-weight-bold" }, [
+                          _vm._v("Name: ")
+                        ]),
+                        _vm._v(_vm._s(_vm.selectedEnrolment.student.name)),
+                        _c("br"),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "font-weight-bold" }, [
+                          _vm._v("Phone: ")
+                        ]),
+                        _vm._v(_vm._s(_vm.selectedEnrolment.student.phone)),
+                        _c("br"),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "font-weight-bold" }, [
+                          _vm._v("Address: ")
+                        ]),
+                        _vm._v(_vm._s(_vm.selectedEnrolment.student.address)),
+                        _c("br")
+                      ]),
+                      _vm._v(" "),
+                      _c("li", { staticClass: "list-group-item" }, [
+                        _c("span", { staticClass: "font-weight-bold" }, [
+                          _vm._v("Course: ")
+                        ]),
+                        _vm._v(_vm._s(_vm.selectedEnrolment.course.title)),
+                        _c("br"),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "font-weight-bold" }, [
+                          _vm._v("Code: ")
+                        ]),
+                        _vm._v(_vm._s(_vm.selectedEnrolment.course.code)),
+                        _c("br"),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "font-weight-bold" }, [
+                          _vm._v("Level: ")
+                        ]),
+                        _vm._v(_vm._s(_vm.selectedEnrolment.course.level)),
+                        _c("br")
+                      ]),
+                      _vm._v(" "),
+                      _c("li", { staticClass: "list-group-item" }, [
+                        _c("span", { staticClass: "font-weight-bold" }, [
+                          _vm._v("Date of Enrolment: ")
+                        ]),
+                        _vm._v(_vm._s(_vm.selectedEnrolment.date))
+                      ]),
+                      _vm._v(" "),
+                      _c("li", { staticClass: "list-group-item" }, [
+                        _c("span", { staticClass: "font-weight-bold" }, [
+                          _vm._v("Time of Enrolment: ")
+                        ]),
+                        _vm._v(_vm._s(_vm.selectedEnrolment.time))
+                      ]),
+                      _vm._v(" "),
+                      _c("li", { staticClass: "list-group-item" }, [
+                        _c("span", { staticClass: "font-weight-bold" }, [
+                          _vm._v("Status: ")
+                        ]),
+                        _vm._v(_vm._s(_vm.selectedEnrolment.status))
+                      ]),
+                      _vm._v(" "),
+                      _c("li", { staticClass: "list-group-item" }, [
+                        _c("button", { staticClass: "btn btn-info mr-2" }, [
+                          _vm._v("Edit")
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-danger",
+                            on: {
+                              click: function($event) {
+                                return _vm.deleteEnrolment(
+                                  _vm.selectedEnrolment.id
+                                )
+                              }
+                            }
+                          },
+                          [_vm._v("Delete")]
+                        )
+                      ])
+                    ])
+                  ])
+                ])
+              ])
+            : _c("span", [_vm._m(2)])
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "thead-dark" }, [
+      _c("tr", [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("#")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Course")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Student")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } })
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [_c("td", [_vm._v("There are no enrolments")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card mt-4" }, [
+      _c("div", { staticClass: "card-header" }, [
+        _c("h5", { staticClass: "card-title" }, [
+          _vm._v("No Enrolment Selected")
+        ])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/enrolments/ViewEnrolmentComponent.vue?vue&type=template&id=98d4eb3a&":
+/*!************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/enrolments/ViewEnrolmentComponent.vue?vue&type=template&id=98d4eb3a& ***!
+  \************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "card" }, [
+    _c("div", { staticClass: "card-header" }, [_vm._v("I am the enrolment")]),
+    _vm._v(" "),
+    _c("div", { staticClass: "card-body" }, [
+      _vm._v("\n\t\tThis is a single Enrolment\n\t\t" + _vm._s(_vm.en) + "\n\t")
+    ])
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -51808,6 +52856,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
 /* harmony import */ var _components_WelcomeComponent_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/WelcomeComponent.vue */ "./resources/js/components/WelcomeComponent.vue");
 /* harmony import */ var _components_courses_ViewCoursesComponent_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/courses/ViewCoursesComponent.vue */ "./resources/js/components/courses/ViewCoursesComponent.vue");
+/* harmony import */ var _components_LoginComponent_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/LoginComponent.vue */ "./resources/js/components/LoginComponent.vue");
+/* harmony import */ var _components_RegisterComponent_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/RegisterComponent.vue */ "./resources/js/components/RegisterComponent.vue");
+/* harmony import */ var _components_enrolments_CreateEnrolmentComponent_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/enrolments/CreateEnrolmentComponent.vue */ "./resources/js/components/enrolments/CreateEnrolmentComponent.vue");
+/* harmony import */ var _components_enrolments_EnrolmentsComponent_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/enrolments/EnrolmentsComponent.vue */ "./resources/js/components/enrolments/EnrolmentsComponent.vue");
+/* harmony import */ var _components_enrolments_ViewEnrolmentComponent_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/enrolments/ViewEnrolmentComponent.vue */ "./resources/js/components/enrolments/ViewEnrolmentComponent.vue");
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -51830,6 +52883,11 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js"); //window.
 //Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
 
+
+
+
+
+
  //Vue.component('welcome-component', require('./components/WelcomeComponent.vue'));
 
 /**
@@ -51847,6 +52905,23 @@ var routes = [{
 }, {
   path: '/courses',
   component: _components_courses_ViewCoursesComponent_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
+}, {
+  path: '/login',
+  component: _components_LoginComponent_vue__WEBPACK_IMPORTED_MODULE_4__["default"]
+}, {
+  path: '/register',
+  component: _components_RegisterComponent_vue__WEBPACK_IMPORTED_MODULE_5__["default"]
+}, {
+  path: '/createEnrolment',
+  component: _components_enrolments_CreateEnrolmentComponent_vue__WEBPACK_IMPORTED_MODULE_6__["default"]
+}, {
+  path: '/enrolments',
+  component: _components_enrolments_EnrolmentsComponent_vue__WEBPACK_IMPORTED_MODULE_7__["default"]
+}, {
+  path: '/viewEnrolment/:id',
+  component: _components_enrolments_ViewEnrolmentComponent_vue__WEBPACK_IMPORTED_MODULE_8__["default"],
+  name: "viewEnrolment",
+  props: true
 }];
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   routes: routes
@@ -51913,6 +52988,144 @@ if (token) {
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     encrypted: true
 // });
+
+/***/ }),
+
+/***/ "./resources/js/components/LoginComponent.vue":
+/*!****************************************************!*\
+  !*** ./resources/js/components/LoginComponent.vue ***!
+  \****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _LoginComponent_vue_vue_type_template_id_4d2414bf___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./LoginComponent.vue?vue&type=template&id=4d2414bf& */ "./resources/js/components/LoginComponent.vue?vue&type=template&id=4d2414bf&");
+/* harmony import */ var _LoginComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./LoginComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/LoginComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _LoginComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _LoginComponent_vue_vue_type_template_id_4d2414bf___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _LoginComponent_vue_vue_type_template_id_4d2414bf___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/LoginComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/LoginComponent.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/components/LoginComponent.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LoginComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./LoginComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LoginComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LoginComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/LoginComponent.vue?vue&type=template&id=4d2414bf&":
+/*!***********************************************************************************!*\
+  !*** ./resources/js/components/LoginComponent.vue?vue&type=template&id=4d2414bf& ***!
+  \***********************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LoginComponent_vue_vue_type_template_id_4d2414bf___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./LoginComponent.vue?vue&type=template&id=4d2414bf& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LoginComponent.vue?vue&type=template&id=4d2414bf&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LoginComponent_vue_vue_type_template_id_4d2414bf___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LoginComponent_vue_vue_type_template_id_4d2414bf___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/RegisterComponent.vue":
+/*!*******************************************************!*\
+  !*** ./resources/js/components/RegisterComponent.vue ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _RegisterComponent_vue_vue_type_template_id_51f045bf___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RegisterComponent.vue?vue&type=template&id=51f045bf& */ "./resources/js/components/RegisterComponent.vue?vue&type=template&id=51f045bf&");
+/* harmony import */ var _RegisterComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RegisterComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/RegisterComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _RegisterComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _RegisterComponent_vue_vue_type_template_id_51f045bf___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _RegisterComponent_vue_vue_type_template_id_51f045bf___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/RegisterComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/RegisterComponent.vue?vue&type=script&lang=js&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/components/RegisterComponent.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RegisterComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./RegisterComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RegisterComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RegisterComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/RegisterComponent.vue?vue&type=template&id=51f045bf&":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/components/RegisterComponent.vue?vue&type=template&id=51f045bf& ***!
+  \**************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RegisterComponent_vue_vue_type_template_id_51f045bf___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./RegisterComponent.vue?vue&type=template&id=51f045bf& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RegisterComponent.vue?vue&type=template&id=51f045bf&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RegisterComponent_vue_vue_type_template_id_51f045bf___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RegisterComponent_vue_vue_type_template_id_51f045bf___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
 
 /***/ }),
 
@@ -52054,6 +53267,213 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/enrolments/CreateEnrolmentComponent.vue":
+/*!*************************************************************************!*\
+  !*** ./resources/js/components/enrolments/CreateEnrolmentComponent.vue ***!
+  \*************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _CreateEnrolmentComponent_vue_vue_type_template_id_0e56f38c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CreateEnrolmentComponent.vue?vue&type=template&id=0e56f38c& */ "./resources/js/components/enrolments/CreateEnrolmentComponent.vue?vue&type=template&id=0e56f38c&");
+/* harmony import */ var _CreateEnrolmentComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CreateEnrolmentComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/enrolments/CreateEnrolmentComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _CreateEnrolmentComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _CreateEnrolmentComponent_vue_vue_type_template_id_0e56f38c___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _CreateEnrolmentComponent_vue_vue_type_template_id_0e56f38c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/enrolments/CreateEnrolmentComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/enrolments/CreateEnrolmentComponent.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************!*\
+  !*** ./resources/js/components/enrolments/CreateEnrolmentComponent.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateEnrolmentComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./CreateEnrolmentComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/enrolments/CreateEnrolmentComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateEnrolmentComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/enrolments/CreateEnrolmentComponent.vue?vue&type=template&id=0e56f38c&":
+/*!********************************************************************************************************!*\
+  !*** ./resources/js/components/enrolments/CreateEnrolmentComponent.vue?vue&type=template&id=0e56f38c& ***!
+  \********************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateEnrolmentComponent_vue_vue_type_template_id_0e56f38c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./CreateEnrolmentComponent.vue?vue&type=template&id=0e56f38c& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/enrolments/CreateEnrolmentComponent.vue?vue&type=template&id=0e56f38c&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateEnrolmentComponent_vue_vue_type_template_id_0e56f38c___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateEnrolmentComponent_vue_vue_type_template_id_0e56f38c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/enrolments/EnrolmentsComponent.vue":
+/*!********************************************************************!*\
+  !*** ./resources/js/components/enrolments/EnrolmentsComponent.vue ***!
+  \********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _EnrolmentsComponent_vue_vue_type_template_id_692a9599___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./EnrolmentsComponent.vue?vue&type=template&id=692a9599& */ "./resources/js/components/enrolments/EnrolmentsComponent.vue?vue&type=template&id=692a9599&");
+/* harmony import */ var _EnrolmentsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./EnrolmentsComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/enrolments/EnrolmentsComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _EnrolmentsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _EnrolmentsComponent_vue_vue_type_template_id_692a9599___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _EnrolmentsComponent_vue_vue_type_template_id_692a9599___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/enrolments/EnrolmentsComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/enrolments/EnrolmentsComponent.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************!*\
+  !*** ./resources/js/components/enrolments/EnrolmentsComponent.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EnrolmentsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./EnrolmentsComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/enrolments/EnrolmentsComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EnrolmentsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/enrolments/EnrolmentsComponent.vue?vue&type=template&id=692a9599&":
+/*!***************************************************************************************************!*\
+  !*** ./resources/js/components/enrolments/EnrolmentsComponent.vue?vue&type=template&id=692a9599& ***!
+  \***************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EnrolmentsComponent_vue_vue_type_template_id_692a9599___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./EnrolmentsComponent.vue?vue&type=template&id=692a9599& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/enrolments/EnrolmentsComponent.vue?vue&type=template&id=692a9599&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EnrolmentsComponent_vue_vue_type_template_id_692a9599___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EnrolmentsComponent_vue_vue_type_template_id_692a9599___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/enrolments/ViewEnrolmentComponent.vue":
+/*!***********************************************************************!*\
+  !*** ./resources/js/components/enrolments/ViewEnrolmentComponent.vue ***!
+  \***********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ViewEnrolmentComponent_vue_vue_type_template_id_98d4eb3a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ViewEnrolmentComponent.vue?vue&type=template&id=98d4eb3a& */ "./resources/js/components/enrolments/ViewEnrolmentComponent.vue?vue&type=template&id=98d4eb3a&");
+/* harmony import */ var _ViewEnrolmentComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ViewEnrolmentComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/enrolments/ViewEnrolmentComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ViewEnrolmentComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ViewEnrolmentComponent_vue_vue_type_template_id_98d4eb3a___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ViewEnrolmentComponent_vue_vue_type_template_id_98d4eb3a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/enrolments/ViewEnrolmentComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/enrolments/ViewEnrolmentComponent.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************!*\
+  !*** ./resources/js/components/enrolments/ViewEnrolmentComponent.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ViewEnrolmentComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./ViewEnrolmentComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/enrolments/ViewEnrolmentComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ViewEnrolmentComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/enrolments/ViewEnrolmentComponent.vue?vue&type=template&id=98d4eb3a&":
+/*!******************************************************************************************************!*\
+  !*** ./resources/js/components/enrolments/ViewEnrolmentComponent.vue?vue&type=template&id=98d4eb3a& ***!
+  \******************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ViewEnrolmentComponent_vue_vue_type_template_id_98d4eb3a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./ViewEnrolmentComponent.vue?vue&type=template&id=98d4eb3a& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/enrolments/ViewEnrolmentComponent.vue?vue&type=template&id=98d4eb3a&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ViewEnrolmentComponent_vue_vue_type_template_id_98d4eb3a___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ViewEnrolmentComponent_vue_vue_type_template_id_98d4eb3a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/sass/app.scss":
 /*!*********************************!*\
   !*** ./resources/sass/app.scss ***!
@@ -52072,8 +53492,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\N00173936\Desktop\College_CA2\Vue_College_MPantaleon\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\N00173936\Desktop\College_CA2\Vue_College_MPantaleon\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\User\Desktop\Other\college_vue\Vue_College_MPantaleon\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\User\Desktop\Other\college_vue\Vue_College_MPantaleon\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

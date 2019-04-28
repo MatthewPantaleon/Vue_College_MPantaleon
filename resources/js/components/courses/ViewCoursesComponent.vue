@@ -62,10 +62,6 @@
 				$.ajax({
 					url: "api/courses",
 					method: "GET",
-					data: "rghdtrh",
-					headers: {
-						
-					},
 					success(response){
 						console.log(response);
 						that.courses = response;
