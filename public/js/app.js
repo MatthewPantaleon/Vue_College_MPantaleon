@@ -2211,19 +2211,52 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     var that = this;
     console.log('View Enrolments Mounted');
     that.getEnrolments();
+    that.getStudents();
+    that.getCourses();
   },
   data: function data() {
     return {
       enrolments: [],
       selectedEnrolment: {},
+      courses: [],
+      students: [],
+      statuses: [],
       token: localStorage.getItem("accessToken"),
       pageSize: 15,
-      pageNumber: 1
+      pageNumber: 1,
+      viewMode: true
     };
   },
   methods: {
@@ -2303,6 +2336,50 @@ __webpack_require__.r(__webpack_exports__);
           console.log(response);
         }
       });
+    },
+    switchMode: function switchMode() {
+      var that = this;
+
+      if (that.viewMode) {
+        that.viewMode = false;
+      } else {
+        that.viewMode = true;
+      }
+    },
+    getStudents: function getStudents() {
+      var that = this;
+      $.ajax({
+        method: 'GET',
+        url: 'api/students',
+        headers: {
+          Authorization: "Bearer " + that.token
+        },
+        success: function success(response) {
+          console.log(response);
+        },
+        error: function error(response) {
+          console.log(response);
+        }
+      });
+    },
+    getCourses: function getCourses() {
+      var that = this;
+      $.ajax({
+        method: 'GET',
+        url: 'api/courses',
+        headers: {
+          Authorization: "Bearer " + that.token
+        },
+        success: function success(response) {
+          console.log(response);
+        },
+        error: function error(response) {
+          console.log(response);
+        }
+      });
+    },
+    getEnum: function getEnum() {
+      var that = this;
     }
   }
 });
@@ -37910,91 +37987,207 @@ var render = function() {
                     ])
                   ]),
                   _vm._v(" "),
-                  _c("div", { staticClass: "card-body" }, [
-                    _c("ul", { staticClass: "list-group list-group-flush" }, [
-                      _c("li", { staticClass: "list-group-item" }, [
-                        _c("span", { staticClass: "font-weight-bold" }, [
-                          _vm._v("Name: ")
-                        ]),
-                        _vm._v(_vm._s(_vm.selectedEnrolment.student.name)),
-                        _c("br"),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "font-weight-bold" }, [
-                          _vm._v("Phone: ")
-                        ]),
-                        _vm._v(_vm._s(_vm.selectedEnrolment.student.phone)),
-                        _c("br"),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "font-weight-bold" }, [
-                          _vm._v("Address: ")
-                        ]),
-                        _vm._v(_vm._s(_vm.selectedEnrolment.student.address)),
-                        _c("br")
-                      ]),
-                      _vm._v(" "),
-                      _c("li", { staticClass: "list-group-item" }, [
-                        _c("span", { staticClass: "font-weight-bold" }, [
-                          _vm._v("Course: ")
-                        ]),
-                        _vm._v(_vm._s(_vm.selectedEnrolment.course.title)),
-                        _c("br"),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "font-weight-bold" }, [
-                          _vm._v("Code: ")
-                        ]),
-                        _vm._v(_vm._s(_vm.selectedEnrolment.course.code)),
-                        _c("br"),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "font-weight-bold" }, [
-                          _vm._v("Level: ")
-                        ]),
-                        _vm._v(_vm._s(_vm.selectedEnrolment.course.level)),
-                        _c("br")
-                      ]),
-                      _vm._v(" "),
-                      _c("li", { staticClass: "list-group-item" }, [
-                        _c("span", { staticClass: "font-weight-bold" }, [
-                          _vm._v("Date of Enrolment: ")
-                        ]),
-                        _vm._v(_vm._s(_vm.selectedEnrolment.date))
-                      ]),
-                      _vm._v(" "),
-                      _c("li", { staticClass: "list-group-item" }, [
-                        _c("span", { staticClass: "font-weight-bold" }, [
-                          _vm._v("Time of Enrolment: ")
-                        ]),
-                        _vm._v(_vm._s(_vm.selectedEnrolment.time))
-                      ]),
-                      _vm._v(" "),
-                      _c("li", { staticClass: "list-group-item" }, [
-                        _c("span", { staticClass: "font-weight-bold" }, [
-                          _vm._v("Status: ")
-                        ]),
-                        _vm._v(_vm._s(_vm.selectedEnrolment.status))
-                      ]),
-                      _vm._v(" "),
-                      _c("li", { staticClass: "list-group-item" }, [
-                        _c("button", { staticClass: "btn btn-info mr-2" }, [
-                          _vm._v("Edit")
-                        ]),
+                  _vm.viewMode
+                    ? _c("div", { staticClass: "card-body" }, [
+                        _c(
+                          "ul",
+                          { staticClass: "list-group list-group-flush" },
+                          [
+                            _c("li", { staticClass: "list-group-item" }, [
+                              _c("span", { staticClass: "font-weight-bold" }, [
+                                _vm._v("Name: ")
+                              ]),
+                              _vm._v(
+                                _vm._s(_vm.selectedEnrolment.student.name)
+                              ),
+                              _c("br"),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "font-weight-bold" }, [
+                                _vm._v("Phone: ")
+                              ]),
+                              _vm._v(
+                                _vm._s(_vm.selectedEnrolment.student.phone)
+                              ),
+                              _c("br"),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "font-weight-bold" }, [
+                                _vm._v("Address: ")
+                              ]),
+                              _vm._v(
+                                _vm._s(_vm.selectedEnrolment.student.address)
+                              ),
+                              _c("br")
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "list-group-item" }, [
+                              _c("span", { staticClass: "font-weight-bold" }, [
+                                _vm._v("Course: ")
+                              ]),
+                              _vm._v(
+                                _vm._s(_vm.selectedEnrolment.course.title)
+                              ),
+                              _c("br"),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "font-weight-bold" }, [
+                                _vm._v("Code: ")
+                              ]),
+                              _vm._v(_vm._s(_vm.selectedEnrolment.course.code)),
+                              _c("br"),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "font-weight-bold" }, [
+                                _vm._v("Level: ")
+                              ]),
+                              _vm._v(
+                                _vm._s(_vm.selectedEnrolment.course.level)
+                              ),
+                              _c("br")
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "list-group-item" }, [
+                              _c("span", { staticClass: "font-weight-bold" }, [
+                                _vm._v("Date of Enrolment: ")
+                              ]),
+                              _vm._v(_vm._s(_vm.selectedEnrolment.date))
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "list-group-item" }, [
+                              _c("span", { staticClass: "font-weight-bold" }, [
+                                _vm._v("Time of Enrolment: ")
+                              ]),
+                              _vm._v(_vm._s(_vm.selectedEnrolment.time))
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "list-group-item" }, [
+                              _c("span", { staticClass: "font-weight-bold" }, [
+                                _vm._v("Status: ")
+                              ]),
+                              _vm._v(_vm._s(_vm.selectedEnrolment.status))
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "list-group-item" }, [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-info mr-2",
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.switchMode()
+                                    }
+                                  }
+                                },
+                                [_vm._v("Edit")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-danger",
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.deleteEnrolment(
+                                        _vm.selectedEnrolment.id
+                                      )
+                                    }
+                                  }
+                                },
+                                [_vm._v("Delete")]
+                              )
+                            ])
+                          ]
+                        )
+                      ])
+                    : _c("div", { staticClass: "card-body" }, [
+                        _c(
+                          "form",
+                          {
+                            on: {
+                              submit: function($event) {
+                                $event.preventDefault()
+                                return _vm.test()
+                              }
+                            }
+                          },
+                          [
+                            _c("input", {
+                              attrs: { type: "text", name: "date" }
+                            }),
+                            _vm._v(" "),
+                            _c("input", {
+                              attrs: { type: "text", name: "time" }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "select",
+                              { attrs: { name: "status" } },
+                              [
+                                _c("option", [_vm._v("Select Status")]),
+                                _vm._v(" "),
+                                _vm._l(_vm.statuses, function(s) {
+                                  return _c(
+                                    "option",
+                                    { attrs: { value: "s" } },
+                                    [_vm._v(_vm._s(s))]
+                                  )
+                                })
+                              ],
+                              2
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "select",
+                              { attrs: { name: "course_id" } },
+                              [
+                                _c("option", { attrs: { value: "" } }, [
+                                  _vm._v("Select Course")
+                                ]),
+                                _vm._v(" "),
+                                _vm._l(_vm.courses, function(c) {
+                                  return _c(
+                                    "option",
+                                    { attrs: { value: "c.id" } },
+                                    [_vm._v(_vm._s(c.title))]
+                                  )
+                                })
+                              ],
+                              2
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "select",
+                              { attrs: { name: "student_id" } },
+                              [
+                                _c("option", { attrs: { value: "" } }, [
+                                  _vm._v("Select Student")
+                                ]),
+                                _vm._v(" "),
+                                _vm._l(_vm.students, function(s) {
+                                  return _c(
+                                    "option",
+                                    { attrs: { value: "s.id" } },
+                                    [_vm._v(_vm._s(s.name))]
+                                  )
+                                })
+                              ],
+                              2
+                            ),
+                            _vm._v(" "),
+                            _c("button", [_vm._v("SUBMIT")])
+                          ]
+                        ),
                         _vm._v(" "),
                         _c(
                           "button",
                           {
-                            staticClass: "btn btn-danger",
+                            staticClass: "btn btn-info mr-2",
                             on: {
                               click: function($event) {
-                                return _vm.deleteEnrolment(
-                                  _vm.selectedEnrolment.id
-                                )
+                                return _vm.switchMode()
                               }
                             }
                           },
-                          [_vm._v("Delete")]
+                          [_vm._v("View")]
                         )
                       ])
-                    ])
-                  ])
                 ])
               ])
             : _c("span", [_vm._m(2)])
