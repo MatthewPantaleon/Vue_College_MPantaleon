@@ -2245,6 +2245,7 @@ __webpack_require__.r(__webpack_exports__);
     that.getEnrolments();
     that.getStudents();
     that.getCourses();
+    that.getEnum();
   },
   data: function data() {
     return {
@@ -2380,6 +2381,19 @@ __webpack_require__.r(__webpack_exports__);
     },
     getEnum: function getEnum() {
       var that = this;
+      $.ajax({
+        method: 'GET',
+        url: 'api/statuses',
+        headers: {
+          Authorization: "Bearer " + that.token
+        },
+        success: function success(response) {
+          console.log(response);
+        },
+        error: function error(response) {
+          console.log(response);
+        }
+      });
     }
   }
 });

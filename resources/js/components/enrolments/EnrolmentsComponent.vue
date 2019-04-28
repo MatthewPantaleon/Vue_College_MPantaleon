@@ -120,6 +120,7 @@
 			that.getEnrolments();
 			that.getStudents();
 			that.getCourses();
+			that.getEnum();
 			
         },
 		data(){
@@ -262,6 +263,20 @@
 			},
 			getEnum(){
 				let that = this;
+				
+				$.ajax({
+					method: 'GET',
+					url: 'api/statuses',
+					headers:{
+						Authorization: "Bearer " + that.token
+					},
+					success: function(response){
+						console.log(response);
+					},
+					error: function(response){
+						console.log(response);
+					}
+				});
 			}
 		}
     }
