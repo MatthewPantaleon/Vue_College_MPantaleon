@@ -39,7 +39,7 @@ class PassportController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => 'Unauthorised'], 401);
+            return response()->json(['error' => 'Invalid Credentials.'], 401);
         }
 
         $credentials = [
@@ -56,7 +56,7 @@ class PassportController extends Controller
             ], 200);
         }
         else {
-            return response()->json(['error' => 'Unauthorised'], 401);
+            return response()->json(['error' => 'Invalid Credentials.'], 401);
         }
     }
 

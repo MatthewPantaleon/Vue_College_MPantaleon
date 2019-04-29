@@ -31,7 +31,8 @@ import RegisterComponent from './components/RegisterComponent.vue';
 
 import CreateEnrolmentComponent from './components/enrolments/CreateEnrolmentComponent.vue';
 import EnrolmentsComponent from './components/enrolments/EnrolmentsComponent.vue';
-import ViewEnrolmenComponent from './components/enrolments/ViewEnrolmentComponent.vue';
+import ViewStudentsComponent from './components/students/ViewStudentsComponent.vue';
+
 //Vue.component('welcome-component', require('./components/WelcomeComponent.vue'));
 
 
@@ -70,10 +71,8 @@ const routes = [
 		component: EnrolmentsComponent
 	},
 	{
-		path: '/viewEnrolment/:id',
-		component: ViewEnrolmenComponent,
-		name: "viewEnrolment",
-		props: true
+		path: '/students',
+		component: ViewStudentsComponent
 	}
 
 ];

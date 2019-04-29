@@ -1,7 +1,7 @@
 <template>
 	<div class="row justify-content-center">
 		<div class="col-6">
-			<div class="card">
+			<div class="card mt-5">
 				<div class="card-header">Login</div>
 
 				<div class="card-body">
@@ -15,6 +15,7 @@
 							<input v-model="password" type="password" name="password" class="form-control">
 						</div>
 						<button type="submit" class="btn btn-primary">Submit</button>
+						<router-link to="/"><button class="btn btn-secondary float-right">Home</button></router-link>
 					</form>
 
 				</div>
@@ -27,20 +28,21 @@
     export default {
         mounted() {
             console.log('Login Mounted');
+			let that = this;
+			that.getUser();
         },
 		data(){
 			return{
 				email: "",
 				password: "",
-				loggedIn: false
+				loggedIn: false,
+				token: localStorage.getItem("accessToken"),
+				user: {}
 			}
 		},
 		methods:{
 			loginSubmit(){
 				let that = this;
-				console.log("You have logged in");
-				console.log(that.email);
-				console.log(that.password);
 				
 				$.ajax({
 					method: "POST",
@@ -56,10 +58,28 @@
 						that.$router.push("/");
 					},
 					error: function(response){
-						console.log(response);
+						alert(response.responseJSON.error);
 					}
 				});
 				
+			},
+			getUser(){
+				let that = this;
+				
+				$.ajax({
+					method: 'GET',
+					url: 'api/user',
+					headers:{
+						Authorization: "Bearer " + that.token
+					},
+					success: function(response){
+						alert("You are already logged in.");
+						that.$router.push("/");
+					},
+					error: function(response){
+						
+					}
+				});
 			}
 		}
     }

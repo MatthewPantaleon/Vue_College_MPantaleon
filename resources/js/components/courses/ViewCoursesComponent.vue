@@ -1,12 +1,20 @@
 <template>
     
-	<div class="card">
-		<div class="card-header">View Courses</div>
+	<div class="card mt-5">
+		<div class="card-header">
+			<h5 style="display: inline-block">Courses</h5>
+			
+			<router-link to="/"><button class="btn btn-primary float-right">Home</button></router-link>
+			<div class="row" v-if="user.name">
+				<div class="col">
+					Welcome, {{ user.name }}
+				</div>
+			</div>
+		</div>
 
 		<div class="card-body">
-			Courses Available:
 			<table class="table table-hover table-striped">
-				<thead>
+				<thead class="thead-dark">
 					<tr>
 						<th>Id</th>
 						<th>Title</th>
@@ -25,13 +33,6 @@
 						<td>{{ c.description }}</td>
 						<td>{{ c.points }}</td>
 						<td>{{ c.level }}</td>
-						
-<!--
-						<div v-if="boo">
-							<td><button class="btn btn-primary">YO</button></td>
-							<td><button class="btn btn-primary">HEDEAD</button></td>
-						</div>
--->
 					</tr>
 				</tbody>
 			
@@ -53,7 +54,12 @@
 		data(){
 			return{
 				courses: [],
-				boo: true
+				boo: true,
+				user:{
+					name: localStorage.getItem("name"),
+					email: localStorage.getItem("name"),
+					token: localStorage.getItem("accessToken")
+				}
 			}
 		},
 		methods:{
@@ -65,7 +71,7 @@
 					url: "api/courses",
 					method: "GET",
 					success(response){
-						console.log(response);
+//						console.log(response);
 						that.courses = response;
 					},
 					error(response){

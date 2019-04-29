@@ -3,17 +3,24 @@
 	<div class="card mt-5">
 		<div class="card-header">
 			
-			<h5>Enrolments</h5>
+			<h5 style="display: inline-block;">Enrolments</h5>
 			<span v-if="user.name" class="float-right">Welcome, {{ user.name }}</span>
-			<button class="btn btn-primary">Home</button>
+			
 		
 		</div>
 		
 		<div class="card-body">
 				
 			<div class="row">
-				<div class="col">
+				<div class="col-8">
 					<button v-for="p in Math.ceil((enrolments.length / pageSize))" @click="nextPage(p)" class="btn btn-secondary pageButtons ml-2 mb-1" :id="p">{{ p }}</button>
+				</div>
+				
+				<div class="col-4">
+					<router-link to="/"><button class="btn btn-primary float-right ml-1">Home</button></router-link>
+					<router-link to="/courses"><button class="btn btn-primary float-right ml-1">Courses</button></router-link>
+					<router-link to="/students"><button class="btn btn-primary float-right ml-1">Students</button></router-link>
+					<router-link to="/createEnrolment"><button class="btn btn-success float-right ml-1 mt-1">Create Enrolment</button></router-link>
 				</div>
 			</div>
 				
@@ -28,6 +35,7 @@
 							<th scope="col">#</th>
 							<th scope="col">Student</th>
 							<th scope="col">Course</th>
+							<th scope="col">Status</th>
 							<th scope="col"></th>
 						</tr>
 					</thead>
@@ -36,6 +44,7 @@
 							<th scope="row">{{ returnArrayIndex(i).id }}</th>
 							<td>{{ returnArrayIndex(i).student.name }}</td>
 							<td>{{ returnArrayIndex(i).course.title }}</td>
+							<td>{{ returnArrayIndex(i).status }}</td>
 							<td><button class="btn btn-secondary viewButtons" :id="returnArrayIndex(i).id+'-enrolment'" @click="viewEnrolment(i)">View</button></router-link></td>
 						</tr>
 					</tbody>
@@ -62,12 +71,13 @@
 										<span class="font-weight-bold">Name: </span>{{ selectedEnrolment.student.name }}<br>
 										<span class="font-weight-bold">Phone: </span>{{ selectedEnrolment.student.phone }}<br>
 										<span class="font-weight-bold">Address: </span>{{ selectedEnrolment.student.address }}<br>
+										<span class="font-weight-bold">Email: </span>{{ selectedEnrolment.student.email }}<br>
 									</li>
 									<li class="list-group-item">
 										<span class="font-weight-bold">Course: </span>{{ selectedEnrolment.course.title }}<br>
 										<span class="font-weight-bold">Code: </span>{{ selectedEnrolment.course.code }}<br>
 										<span class="font-weight-bold">Level: </span>{{ selectedEnrolment.course.level }}<br>
-									
+										<span class="font-weight-bold">Points: </span>{{ selectedEnrolment.course.points }}<br>
 									</li>
 									<li class="list-group-item"><span class="font-weight-bold">Date of Enrolment: </span>{{selectedEnrolment.date}}</li>
 									<li class="list-group-item"><span class="font-weight-bold">Time of Enrolment: </span>{{selectedEnrolment.time}}</li>
@@ -156,11 +166,8 @@
         mounted() {
 			let that = this;
             console.log('View Enrolments Mounted');
-			that.getEnrolments();
-			that.getStudents();
-			that.getCourses();
-			that.getEnum();
 			that.getUser();
+			
         },
 		data(){
 			return{
@@ -182,7 +189,7 @@
 				statuses: [],
 				errors: {},
 				token: localStorage.getItem("accessToken"),
-				pageSize: 10,
+				pageSize: 15,
 				pageNumber: 1,
 				viewMode: true,
 			}
@@ -198,7 +205,7 @@
 						Authorization: "Bearer " + that.token
 					},
 					success: function(response){
-						console.log(response);
+//						console.log(response);
 						that.enrolments = response;
 						that.selectedEnrolment = response[0];
 						
@@ -290,7 +297,7 @@
 						Authorization: "Bearer " + that.token
 					},
 					success: function(response){
-						console.log(response);
+//						console.log(response);
 						that.students = response;
 					},
 					error: function(response){
@@ -308,7 +315,7 @@
 						Authorization: "Bearer " + that.token
 					},
 					success: function(response){
-						console.log(response);
+//						console.log(response);
 						that.courses = response;
 					},
 					error: function(response){
@@ -326,7 +333,7 @@
 						Authorization: "Bearer " + that.token
 					},
 					success: function(response){
-						console.log(response);
+//						console.log(response);
 						that.statuses = response;
 					},
 					error: function(response){
@@ -347,14 +354,15 @@
 					dataType: 'json',
 					data: $("#editForm").serializeArray(),
 					success: function(response){
-						console.log(response);
+//						console.log(response);
 						that.selectedEnrolment = response;
 						let realIndex = that.enrolments.findIndex(x => x.id === id);
 						that.enrolments.splice(realIndex, 1, response);
 						that.errors = {};
+						that.viewMode = true;
 					},
 					error: function(response){
-						console.log(response);
+//						console.log(response);
 						that.errors = response.responseJSON;
 					}
 				});
@@ -372,9 +380,16 @@
 //						console.log(response);
 						that.user.name = response.user.name;
 						that.user.email = response.user.email;
+						
+						that.getEnrolments();
+						that.getStudents();
+						that.getCourses();
+						that.getEnum();
 					},
 					error: function(response){
-						console.log(response);
+//						console.log(response);
+						alert("You are not logged in.");
+						that.$router.push("/");
 					}
 				});
 			}

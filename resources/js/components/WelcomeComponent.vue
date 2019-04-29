@@ -7,6 +7,7 @@
 
 				<div class="card-body">
 					<router-link to="/login" v-if="!user.name"><button class="btn btn-success">Login</button></router-link>
+					<router-link to="/register" v-if="!user.name"><button class="btn btn-success float-right">Register</button></router-link>
 					<router-link to="" v-else><button @click="logoutUser()" class="btn btn-success">Logout</button></router-link>
 					
 					<hr>
