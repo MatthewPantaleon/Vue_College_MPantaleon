@@ -69,6 +69,9 @@
 						console.log(response);
 						
 						localStorage.setItem("accessToken", response.token);
+						localStorage.setItem("name", response.name);
+						localStorage.setItem("email", response.email);
+						that.$router.push("/");
 					},
 					error: function(response){
 //						console.log(response);

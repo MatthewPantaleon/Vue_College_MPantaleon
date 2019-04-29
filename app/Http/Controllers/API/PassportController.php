@@ -28,7 +28,7 @@ class PassportController extends Controller
         ]);
 
         $token = $user->createToken('Medical-Centre')->accessToken;
-        return response()->json(['token' => $token], 200);
+        return response()->json(['token' => $token, 'name' => $user->name, 'email' => $user->email], 200);
     }
 
     public function login(Request $request)

@@ -79,6 +79,7 @@
 				courses: [],
 				students: [],
 				statuses: [],
+				selectedStudent: {},
 				token: localStorage.getItem('accessToken'),
 				name: "",
 				time: "",

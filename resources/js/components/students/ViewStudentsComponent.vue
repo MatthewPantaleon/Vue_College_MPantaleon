@@ -13,7 +13,20 @@
 		</div>
 
 		<div class="card-body">
+			<table class="table table-hover table-striped">
+				<thead class="thead-dark">
+					<tr>
+						<th>#</th>
+					</tr>
+				</thead>
+				
+				<tbody>
+					<tr v-for="s in students">
+						<td>{{ s.id }}</td>
+					</tr>
+				</tbody>
 			
+			</table>
 		</div>
 	</div>
 

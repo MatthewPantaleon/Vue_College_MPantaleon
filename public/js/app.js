@@ -1927,6 +1927,9 @@ __webpack_require__.r(__webpack_exports__);
         success: function success(response) {
           console.log(response);
           localStorage.setItem("accessToken", response.token);
+          localStorage.setItem("name", response.name);
+          localStorage.setItem("email", response.email);
+          that.$router.push("/");
         },
         error: function error(response) {
           //						console.log(response);
@@ -2207,6 +2210,7 @@ __webpack_require__.r(__webpack_exports__);
       courses: [],
       students: [],
       statuses: [],
+      selectedStudent: {},
       token: localStorage.getItem('accessToken'),
       name: "",
       time: "",
@@ -2732,6 +2736,19 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -39158,10 +39175,31 @@ var render = function() {
       1
     ),
     _vm._v(" "),
-    _c("div", { staticClass: "card-body" })
+    _c("div", { staticClass: "card-body" }, [
+      _c("table", { staticClass: "table table-hover table-striped" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "tbody",
+          _vm._l(_vm.students, function(s) {
+            return _c("tr", [_c("td", [_vm._v(_vm._s(s.id))])])
+          }),
+          0
+        )
+      ])
+    ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "thead-dark" }, [
+      _c("tr", [_c("th", [_vm._v("#")])])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -54583,8 +54621,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\N00173936\Desktop\College_CA2\Vue_College_MPantaleon\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\N00173936\Desktop\College_CA2\Vue_College_MPantaleon\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\User\Desktop\Other\college_vue\Vue_College_MPantaleon\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\User\Desktop\Other\college_vue\Vue_College_MPantaleon\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
