@@ -49,6 +49,9 @@
             .m-b-md {
                 margin-bottom: 30px;
             }
+			small{
+				color: lightcoral;
+			}
         </style>
     </head>
 	

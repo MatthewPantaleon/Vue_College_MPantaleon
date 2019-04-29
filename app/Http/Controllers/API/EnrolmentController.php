@@ -90,7 +90,9 @@ class EnrolmentController extends Controller
         $enrolment->course_id = $request->input('course_id');
         $enrolment->student_id = $request->input('student_id');
         $enrolment->save();
-
+		
+		//the enrolment would also return the course and the student object
+		$enrolment->load(['course', 'student']);
         return $enrolment;
     }
 

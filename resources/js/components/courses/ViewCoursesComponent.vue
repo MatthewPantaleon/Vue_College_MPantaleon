@@ -26,10 +26,12 @@
 						<td>{{ c.points }}</td>
 						<td>{{ c.level }}</td>
 						
+<!--
 						<div v-if="boo">
 							<td><button class="btn btn-primary">YO</button></td>
 							<td><button class="btn btn-primary">HEDEAD</button></td>
 						</div>
+-->
 					</tr>
 				</tbody>
 			
