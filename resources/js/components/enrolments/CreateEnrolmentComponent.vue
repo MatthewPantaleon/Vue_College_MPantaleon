@@ -24,13 +24,14 @@
 									
 									<span class="font-weight-bold">Course Enrolments: </span>
 									
-									<div v-for="sen in selectedStudentEnrolments">
+									<div v-for="sen in selectedStudentEnrolments" :key="sen.course.id">
 										<span :id="sen.course.id + '-course'">{{ sen.course.title }}</span><br>
 									</div>
-									<h6 style="color: red;" class="mt-4" id="warning"></h6>
 									<div v-if="selectedStudentEnrolments.length == 0">
 										This student is not enroled in any courses.
 									</div>
+									<h6 style="color: red;" class="mt-4" id="warning"></h6>
+									
 								</li>
 						</ul>
 
@@ -160,16 +161,22 @@
 			//get currently selected student
 			selectStudent(index){
 				let that = this;
-				let realIndex = that.students.findIndex(x => x.id === index);
-				that.selectedStudent = that.students[realIndex];
 				
-				$(document).ready(function(){
-					$("span").css("color", "#636b6f");
-					$("#warning").html();
-				});
-				
-				that.selectedStudentEnrolments = that.selectedStudent.enrolments;
-				that.checkCourse(that.course_id);
+				if(index){
+					let realIndex = that.students.findIndex(x => x.id === index);
+					that.selectedStudent = that.students[realIndex];
+
+					$(document).ready(function(){
+						$("span").css("color", "#636b6f");
+						$("#warning").html("");
+					});
+
+					that.selectedStudentEnrolments = that.selectedStudent.enrolments;
+					that.checkCourse(that.course_id);
+				}else{
+					that.selectedStudentEnrolments = [];
+					$("#warning").html("");
+				}
 			},
 			
 			//submit new enrolment

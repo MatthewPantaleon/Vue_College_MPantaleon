@@ -2230,6 +2230,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     var that = this;
@@ -2307,16 +2308,22 @@ __webpack_require__.r(__webpack_exports__);
     //get currently selected student
     selectStudent: function selectStudent(index) {
       var that = this;
-      var realIndex = that.students.findIndex(function (x) {
-        return x.id === index;
-      });
-      that.selectedStudent = that.students[realIndex];
-      $(document).ready(function () {
-        $("span").css("color", "#636b6f");
-        $("#warning").html();
-      });
-      that.selectedStudentEnrolments = that.selectedStudent.enrolments;
-      that.checkCourse(that.course_id);
+
+      if (index) {
+        var realIndex = that.students.findIndex(function (x) {
+          return x.id === index;
+        });
+        that.selectedStudent = that.students[realIndex];
+        $(document).ready(function () {
+          $("span").css("color", "#636b6f");
+          $("#warning").html("");
+        });
+        that.selectedStudentEnrolments = that.selectedStudent.enrolments;
+        that.checkCourse(that.course_id);
+      } else {
+        that.selectedStudentEnrolments = [];
+        $("#warning").html("");
+      }
     },
     //submit new enrolment
     submitEnrolment: function submitEnrolment() {
@@ -38780,7 +38787,7 @@ var render = function() {
                     ]),
                     _vm._v(" "),
                     _vm._l(_vm.selectedStudentEnrolments, function(sen) {
-                      return _c("div", [
+                      return _c("div", { key: sen.course.id }, [
                         _c(
                           "span",
                           { attrs: { id: sen.course.id + "-course" } },
@@ -38790,19 +38797,19 @@ var render = function() {
                       ])
                     }),
                     _vm._v(" "),
-                    _c("h6", {
-                      staticClass: "mt-4",
-                      staticStyle: { color: "red" },
-                      attrs: { id: "warning" }
-                    }),
-                    _vm._v(" "),
                     _vm.selectedStudentEnrolments.length == 0
                       ? _c("div", [
                           _vm._v(
                             "\n\t\t\t\t\t\t\t\t\tThis student is not enroled in any courses.\n\t\t\t\t\t\t\t\t"
                           )
                         ])
-                      : _vm._e()
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("h6", {
+                      staticClass: "mt-4",
+                      staticStyle: { color: "red" },
+                      attrs: { id: "warning" }
+                    })
                   ],
                   2
                 )
