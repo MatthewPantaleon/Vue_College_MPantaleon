@@ -12,18 +12,31 @@
 					<form @submit.prevent="submitEnrolment()">
 						<div class="form-group">
 							<label for="student">Student:</label>
-							<select name="student" class="form-control" v-model="student_id">
+							<select name="student" class="form-control" v-model="student_id" @change="selectStudent(student_id)">
 								<option value="">Select Student</option>
 								<option v-for="s in students" :value="s.id">{{ s.name }}</option>
 							</select>
 							<small v-if="Array.isArray(errors.student_id)">{{ errors.student_id[0] }}</small>
 						</div>
 						
-						<hr>
+						<ul class="list-group list-group-flush mb-4">
+								<li class="list-group-item">
+									
+									<span class="font-weight-bold">Course Enrolments: </span>
+									
+									<div v-for="sen in selectedStudentEnrolments">
+										<span :id="sen.course.id + '-course'">{{ sen.course.title }}</span><br>
+									</div>
+									<h6 style="color: red;" class="mt-4" id="warning"></h6>
+									<div v-if="selectedStudentEnrolments.length == 0">
+										This student is not enroled in any courses.
+									</div>
+								</li>
+						</ul>
 
 						<div class="form-group">
 							<label for="course">Course:</label>
-							<select name="course" class="form-control" v-model="course_id">
+							<select name="course" class="form-control" v-model="course_id" @change="checkCourse(course_id)">
 								<option value="">Select Course</option>
 								<option v-for="c in courses" :value="c.id">{{ c.title }}</option>
 							</select>
@@ -80,6 +93,7 @@
 				students: [],
 				statuses: [],
 				selectedStudent: {},
+				selectedStudentEnrolments: [],
 				token: localStorage.getItem('accessToken'),
 				name: "",
 				time: "",
@@ -92,6 +106,7 @@
 			}
 		},
 		methods:{
+			//get courses, students and statuses
 			getCourses(){
 				let that = this;
 				$.ajax({
@@ -115,7 +130,7 @@
 						Authorization: "Bearer " + localStorage.getItem("accessToken")
 					},
 					success: function(response){
-//						console.log(response);
+						console.log(response);
 						that.students = response;
 					},
 					error: function(response){
@@ -141,6 +156,23 @@
 					}
 				});
 			},
+			
+			//get currently selected student
+			selectStudent(index){
+				let that = this;
+				let realIndex = that.students.findIndex(x => x.id === index);
+				that.selectedStudent = that.students[realIndex];
+				
+				$(document).ready(function(){
+					$("span").css("color", "#636b6f");
+					$("#warning").html();
+				});
+				
+				that.selectedStudentEnrolments = that.selectedStudent.enrolments;
+				that.checkCourse(that.course_id);
+			},
+			
+			//submit new enrolment
 			submitEnrolment(){
 				let that = this;
 				let formData = {time: that.time, date: that.date, status: that.status, course_id: that.course_id, student_id: that.student_id};
@@ -158,11 +190,35 @@
 						that.$router.push("/enrolments");
 					},
 					error: function(response){
-						console.log(response.responseJSON);
+//						console.log(response.responseJSON);
 						that.errors = response.responseJSON;
 					}
 				});
 				
+			},
+			
+			//checks if the selected course for the student alraedy exists and marks them red
+			checkCourse(courseId){
+				let that = this;
+				
+				for(let i = 0; i < that.selectedStudentEnrolments.length; i++){
+					let en = that.selectedStudentEnrolments[i];
+					
+					$("span").css("color", "#636b6f");
+					
+					if(courseId == en.course.id){
+						$(document).ready(function(){
+							$("#" + en.course.id + "-course").css("color", "red");
+							$("#warning").html("Student is already enroled in this course.");
+						});
+						break;
+					}else{
+						$(document).ready(function(){
+							$("#" + en.course.id + "-course").css("color", "#636b6f");
+							$("#warning").html("");
+						});
+					}
+				}
 			},
 			getUser(){
 				let that = this;

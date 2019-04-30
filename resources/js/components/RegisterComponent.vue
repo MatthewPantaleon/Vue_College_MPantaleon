@@ -8,6 +8,7 @@
 
 				<div class="card-body">
 					<form @submit.prevent="registerSubmit()" class="form">
+						
 						<div class="form-group">
 							<label for="name">Name:</label>
 							<input v-model="name" type="text" name="name" class="form-control">
@@ -27,7 +28,9 @@
 						</div>
 					
 						<button type="submit" class="btn btn-primary">Submit</button>
+						
 						<router-link to="/"><button class="btn btn-secondary float-right">Home</button></router-link>
+						
 					</form>
 				</div>
 			</div>
@@ -40,7 +43,7 @@
         mounted() {
             console.log('Register Mounted');
 			let that = this;
-			
+			//validate user first
 			that.getUser();
         },
 		data(){

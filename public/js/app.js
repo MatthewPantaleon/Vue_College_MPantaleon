@@ -1789,10 +1789,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log('Login Mounted');
-    var that = this;
+    var that = this; //validate if a user is logged in
+
     that.getUser();
   },
   data: function data() {
@@ -1800,11 +1805,11 @@ __webpack_require__.r(__webpack_exports__);
       email: "",
       password: "",
       loggedIn: false,
-      token: localStorage.getItem("accessToken"),
-      user: {}
+      token: localStorage.getItem("accessToken")
     };
   },
   methods: {
+    //login
     loginSubmit: function loginSubmit() {
       var that = this;
       $.ajax({
@@ -1893,10 +1898,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log('Register Mounted');
-    var that = this;
+    var that = this; //validate user first
+
     that.getUser();
   },
   data: function data() {
@@ -1990,6 +1999,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     var that = this;
@@ -1997,6 +2011,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
+      //get current user logged in
       user: {
         name: localStorage.getItem("name"),
         token: localStorage.getItem("accessToken"),
@@ -2014,7 +2029,8 @@ __webpack_require__.r(__webpack_exports__);
           Authorization: "Bearer " + that.user.token
         },
         success: function success(response) {
-          console.log(response);
+          console.log(response); //clear localStorage and user object
+
           localStorage.clear();
           that.user.name = "";
           that.user.token = "";
@@ -2084,6 +2100,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log('Courses Component.');
@@ -2093,10 +2112,9 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       courses: [],
-      boo: true,
       user: {
         name: localStorage.getItem("name"),
-        email: localStorage.getItem("name"),
+        email: localStorage.getItem("email"),
         token: localStorage.getItem("accessToken")
       }
     };
@@ -2108,7 +2126,7 @@ __webpack_require__.r(__webpack_exports__);
         url: "api/courses",
         method: "GET",
         success: function success(response) {
-          //						console.log(response);
+          console.log(response);
           that.courses = response;
         },
         error: function error(response) {
@@ -2199,6 +2217,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     var that = this;
@@ -2211,6 +2242,7 @@ __webpack_require__.r(__webpack_exports__);
       students: [],
       statuses: [],
       selectedStudent: {},
+      selectedStudentEnrolments: [],
       token: localStorage.getItem('accessToken'),
       name: "",
       time: "",
@@ -2223,6 +2255,7 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    //get courses, students and statuses
     getCourses: function getCourses() {
       var that = this;
       $.ajax({
@@ -2246,7 +2279,7 @@ __webpack_require__.r(__webpack_exports__);
           Authorization: "Bearer " + localStorage.getItem("accessToken")
         },
         success: function success(response) {
-          //						console.log(response);
+          console.log(response);
           that.students = response;
         },
         error: function error(response) {
@@ -2271,6 +2304,21 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
+    //get currently selected student
+    selectStudent: function selectStudent(index) {
+      var that = this;
+      var realIndex = that.students.findIndex(function (x) {
+        return x.id === index;
+      });
+      that.selectedStudent = that.students[realIndex];
+      $(document).ready(function () {
+        $("span").css("color", "#636b6f");
+        $("#warning").html();
+      });
+      that.selectedStudentEnrolments = that.selectedStudent.enrolments;
+      that.checkCourse(that.course_id);
+    },
+    //submit new enrolment
     submitEnrolment: function submitEnrolment() {
       var that = this;
       var formData = {
@@ -2293,10 +2341,38 @@ __webpack_require__.r(__webpack_exports__);
           that.$router.push("/enrolments");
         },
         error: function error(response) {
-          console.log(response.responseJSON);
+          //						console.log(response.responseJSON);
           that.errors = response.responseJSON;
         }
       });
+    },
+    //checks if the selected course for the student alraedy exists and marks them red
+    checkCourse: function checkCourse(courseId) {
+      var that = this;
+
+      var _loop = function _loop(i) {
+        var en = that.selectedStudentEnrolments[i];
+        $("span").css("color", "#636b6f");
+
+        if (courseId == en.course.id) {
+          $(document).ready(function () {
+            $("#" + en.course.id + "-course").css("color", "red");
+            $("#warning").html("Student is already enroled in this course.");
+          });
+          return "break";
+        } else {
+          $(document).ready(function () {
+            $("#" + en.course.id + "-course").css("color", "#636b6f");
+            $("#warning").html("");
+          });
+        }
+      };
+
+      for (var i = 0; i < that.selectedStudentEnrolments.length; i++) {
+        var _ret = _loop(i);
+
+        if (_ret === "break") break;
+      }
     },
     getUser: function getUser() {
       var that = this;
@@ -2524,17 +2600,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     var that = this;
-    console.log('View Enrolments Mounted');
+    console.log('View Enrolments Mounted'); //validate user first
+
     that.getUser();
   },
   data: function data() {
     return {
+      //arrays to hold data
       enrolments: [],
       trueEnrolments: [],
+      courses: [],
+      students: [],
+      statuses: [],
+      //current enrolment object
       selectedEnrolment: {},
+      //object to hold edit data for current enrolment object
       editEnrolment: {
         student_id: "",
         course_id: "",
@@ -2542,24 +2630,24 @@ __webpack_require__.r(__webpack_exports__);
         time: "",
         status: ""
       },
+      //object to hold verified user credentials
       user: {
         name: "",
         email: ""
       },
-      courses: [],
-      students: [],
-      statuses: [],
       errors: {},
       token: localStorage.getItem("accessToken"),
       pageSize: 10,
       pageNumber: 1,
       viewMode: true,
+      //variables used to store filter parameters
       searchStudent: "",
       searchCourse: "",
       searchStatus: ""
     };
   },
   methods: {
+    //gets enrolments
     getEnrolments: function getEnrolments() {
       var that = this;
       $.ajax({
@@ -2580,27 +2668,85 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
+    //gets students
+    getStudents: function getStudents() {
+      var that = this;
+      $.ajax({
+        method: 'GET',
+        url: 'api/students',
+        headers: {
+          Authorization: "Bearer " + that.token
+        },
+        success: function success(response) {
+          //						console.log(response);
+          that.students = response;
+        },
+        error: function error(response) {
+          console.log(response);
+        }
+      });
+    },
+    //gets courses
+    getCourses: function getCourses() {
+      var that = this;
+      $.ajax({
+        method: 'GET',
+        url: 'api/courses',
+        headers: {
+          Authorization: "Bearer " + that.token
+        },
+        success: function success(response) {
+          //						console.log(response);
+          that.courses = response;
+        },
+        error: function error(response) {
+          console.log(response);
+        }
+      });
+    },
+    //gets the enum values from the status column
+    getEnum: function getEnum() {
+      var that = this;
+      $.ajax({
+        method: 'GET',
+        url: 'api/statuses',
+        headers: {
+          Authorization: "Bearer " + that.token
+        },
+        success: function success(response) {
+          //						console.log(response);
+          that.statuses = response;
+        },
+        error: function error(response) {
+          console.log(response);
+        }
+      });
+    },
+    //changes the page number and updates the DOM accordingly
     nextPage: function nextPage(p) {
       var that = this;
       that.pageNumber = p;
       that.updateJQuery();
     },
+    //returns a boolean to check if the index exists
     checkIndex: function checkIndex(index) {
       var that = this;
       return that.enrolments[index - 1 + that.pageSize * (that.pageNumber - 1)] != undefined ? true : false;
     },
+    //returns the object in this index in the enrolment array
     returnArrayIndex: function returnArrayIndex(index) {
       var that = this;
       return that.enrolments[index - 1 + that.pageSize * (that.pageNumber - 1)];
     },
+    //holds the current enrolment object selected
     viewEnrolment: function viewEnrolment(index) {
       var that = this;
-      that.selectedEnrolment = that.returnArrayIndex(index); //change the state of the view buttons to reflect which enrolment is selected
-
+      that.selectedEnrolment = that.returnArrayIndex(index);
       that.updateJQuery();
       that.viewMode = true;
       that.errors = {};
     },
+    //delete enrolment
     deleteEnrolment: function deleteEnrolment(id) {
       var that = this;
 
@@ -2628,67 +2774,13 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
+    //switches between viewing and editing an enrolment
     switchMode: function switchMode() {
       var that = this;
       that.errors = {};
-
-      if (that.viewMode) {
-        that.viewMode = false;
-      } else {
-        that.viewMode = true;
-      }
+      that.viewMode ? that.viewMode = false : that.viewMode = true;
     },
-    getStudents: function getStudents() {
-      var that = this;
-      $.ajax({
-        method: 'GET',
-        url: 'api/students',
-        headers: {
-          Authorization: "Bearer " + that.token
-        },
-        success: function success(response) {
-          //						console.log(response);
-          that.students = response;
-        },
-        error: function error(response) {
-          console.log(response);
-        }
-      });
-    },
-    getCourses: function getCourses() {
-      var that = this;
-      $.ajax({
-        method: 'GET',
-        url: 'api/courses',
-        headers: {
-          Authorization: "Bearer " + that.token
-        },
-        success: function success(response) {
-          //						console.log(response);
-          that.courses = response;
-        },
-        error: function error(response) {
-          console.log(response);
-        }
-      });
-    },
-    getEnum: function getEnum() {
-      var that = this;
-      $.ajax({
-        method: 'GET',
-        url: 'api/statuses',
-        headers: {
-          Authorization: "Bearer " + that.token
-        },
-        success: function success(response) {
-          //						console.log(response);
-          that.statuses = response;
-        },
-        error: function error(response) {
-          console.log(response);
-        }
-      });
-    },
+    //submit request to update selected enrolment
     submitEdit: function submitEdit(id) {
       var that = this; //				console.log($("#editForm").serializeArray());
 
@@ -2703,12 +2795,13 @@ __webpack_require__.r(__webpack_exports__);
         success: function success(response) {
           //						console.log(response);
           that.selectedEnrolment = response;
-          var realIndex = that.enrolments.findIndex(function (x) {
+          var realIndex = that.trueEnrolments.findIndex(function (x) {
             return x.id === id;
           });
-          that.enrolments.splice(realIndex, 1, response);
+          that.trueEnrolments.splice(realIndex, 1, response);
           that.errors = {};
           that.viewMode = true;
+          that.filter(that.searchStudent, that.searchCourse, that.searchStatus);
         },
         error: function error(response) {
           //						console.log(response);
@@ -2716,6 +2809,7 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
+    //validates if a valid user is logged in
     getUser: function getUser() {
       var that = this;
       $.ajax({
@@ -2727,21 +2821,23 @@ __webpack_require__.r(__webpack_exports__);
         success: function success(response) {
           //						console.log(response);
           that.user.name = response.user.name;
-          that.user.email = response.user.email;
+          that.user.email = response.user.email; //once the user is verified then get all the data
+
           that.getEnrolments();
           that.getStudents();
           that.getCourses();
           that.getEnum();
         },
         error: function error(response) {
-          //						console.log(response);
           alert("You are not logged in.");
           that.$router.push("/");
         }
       });
     },
+    //filter out enrolments based on student, course and status
     filter: function filter(studentId, courseId, status) {
-      var that = this;
+      var that = this; //resets enrolments array to hold all enrolments
+
       studentId == "" && courseId == "" && status == "" ? that.enrolments = that.trueEnrolments : 0; //re-enables selects if both are empty
 
       if (studentId == "" && courseId == "") {
@@ -2797,6 +2893,7 @@ __webpack_require__.r(__webpack_exports__);
       if (studentId == "" && Number.isInteger(courseId) && status != "") {
         that.enrolments = that.trueEnrolments;
         var _temp3 = [];
+        $("#searchStudent").prop('disabled', true);
         that.enrolments.forEach(function (obj, i) {
           if (obj.status == status && obj.course_id == courseId) {
             _temp3.push(obj);
@@ -2811,6 +2908,7 @@ __webpack_require__.r(__webpack_exports__);
       if (Number.isInteger(studentId) && courseId == "" && status != "") {
         that.enrolments = that.trueEnrolments;
         var _temp4 = [];
+        $("#searchCourse").prop('disabled', true);
         that.enrolments.forEach(function (obj, i) {
           if (obj.status == status && obj.student_id == studentId) {
             _temp4.push(obj);
@@ -2821,6 +2919,7 @@ __webpack_require__.r(__webpack_exports__);
         that.enrolments = _temp4;
       }
     },
+    //fucntion to update all DOM elements that give user feedback
     updateJQuery: function updateJQuery() {
       var that = this;
       $(document).ready(function () {
@@ -2922,10 +3021,31 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     var that = this;
-    console.log('Students Mounted');
+    console.log('Students Mounted'); //validate user first
+
     that.getUser();
   },
   data: function data() {
@@ -2938,11 +3058,12 @@ __webpack_require__.r(__webpack_exports__);
         token: localStorage.getItem("accessToken"),
         email: localStorage.getItem("email")
       },
-      pageSize: 7,
+      pageSize: 8,
       pageNumber: 1
     };
   },
   methods: {
+    //get students
     getStudents: function getStudents() {
       var that = this;
       $.ajax({
@@ -2952,7 +3073,7 @@ __webpack_require__.r(__webpack_exports__);
           Authorization: "Bearer " + localStorage.getItem("accessToken")
         },
         success: function success(response) {
-          console.log(response);
+          //						console.log(response);
           that.students = response;
           that.selectedStudent = response[0];
           that.selectedStudentEnrolments = response[0].enrolments;
@@ -2964,6 +3085,7 @@ __webpack_require__.r(__webpack_exports__);
         error: function error(response) {}
       });
     },
+    //assign selected student
     viewStudent: function viewStudent(id) {
       var that = this;
       var realIndex = that.students.findIndex(function (x) {
@@ -2971,9 +3093,9 @@ __webpack_require__.r(__webpack_exports__);
       });
       that.selectedStudent = that.students[realIndex];
       that.selectedStudentEnrolments = that.selectedStudent.enrolments;
-      $(".viewButtons").removeClass("btn-primary").addClass("btn-secondary").html("View");
-      $("#" + that.selectedStudent.id + "-student").removeClass("btn-secondary").addClass("btn-primary").html("Selected");
+      that.updateJQuery();
     },
+    //authenticate user
     getUser: function getUser() {
       var that = this;
       $.ajax({
@@ -2994,21 +3116,30 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
+    //returns boolean if the inedx exists
     checkIndex: function checkIndex(index) {
       var that = this;
       return that.students[index - 1 + that.pageSize * (that.pageNumber - 1)] != undefined ? true : false;
     },
+    //returns student object for index
     returnArrayIndex: function returnArrayIndex(index) {
       var that = this;
       return that.students[index - 1 + that.pageSize * (that.pageNumber - 1)];
     },
+    //pagination for students
     nextPage: function nextPage(p) {
       var that = this;
       that.pageNumber = p;
-      $(".pageButtons").removeClass("btn-primary").addClass("btn-secondary");
-      $("#" + that.pageNumber).addClass("btn-primary").removeClass("btn-secondary");
+      that.updateJQuery();
+    },
+    //update DOM elements for user feedback
+    updateJQuery: function updateJQuery() {
+      var that = this;
       $(document).ready(function () {
+        $(".viewButtons").addClass("btn-secondary").removeClass("btn-primary").html("View");
         $("#" + that.selectedStudent.id + "-student").removeClass("btn-secondary").addClass("btn-primary").html("Selected");
+        $(".pageButtons").addClass("btn-secondary").removeClass("btn-primary");
+        $("#" + that.pageNumber).addClass("btn-primary").removeClass("btn-secondary");
       });
     }
   }
@@ -38335,7 +38466,10 @@ var render = function() {
     _c("div", { staticClass: "col-6" }, [
       _c("div", { staticClass: "card mt-5" }, [
         _c("div", { staticClass: "card-header" }, [
-          _vm._v("Welcome to the College Database"),
+          _c("h5", { staticStyle: { display: "inline-block" } }, [
+            _vm._v("The College Database")
+          ]),
+          _vm._v(" "),
           _vm.user.name
             ? _c("span", { staticClass: "float-right" }, [
                 _vm._v("Welcome, " + _vm._s(_vm.user.name))
@@ -38384,7 +38518,7 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _vm.user.token
+            _vm.user.token && _vm.user.name
               ? _c("router-link", { attrs: { to: "/enrolments" } }, [
                   _c("button", { staticClass: "btn btn-primary" }, [
                     _vm._v("Enrolments")
@@ -38392,7 +38526,7 @@ var render = function() {
                 ])
               : _vm._e(),
             _vm._v(" "),
-            _vm.user.token
+            _vm.user.token && _vm.user.name
               ? _c("router-link", { attrs: { to: "/students" } }, [
                   _c("button", { staticClass: "btn btn-primary" }, [
                     _vm._v("Students")
@@ -38438,9 +38572,29 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("router-link", { attrs: { to: "/" } }, [
-          _c("button", { staticClass: "btn btn-primary float-right" }, [
+          _c("button", { staticClass: "btn btn-primary float-right ml-1" }, [
             _vm._v("Home")
           ])
+        ]),
+        _vm._v(" "),
+        _c("router-link", { attrs: { to: "/enrolments" } }, [
+          _vm.user.name && _vm.user.token
+            ? _c(
+                "button",
+                { staticClass: "btn btn-primary float-right ml-1" },
+                [_vm._v("Enrolments")]
+              )
+            : _vm._e()
+        ]),
+        _vm._v(" "),
+        _c("router-link", { attrs: { to: "/students" } }, [
+          _vm.user.name && _vm.user.token
+            ? _c(
+                "button",
+                { staticClass: "btn btn-primary float-right ml-1" },
+                [_vm._v("Students")]
+              )
+            : _vm._e()
         ]),
         _vm._v(" "),
         _vm.user.name
@@ -38577,19 +38731,24 @@ var render = function() {
                     staticClass: "form-control",
                     attrs: { name: "student" },
                     on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.student_id = $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
-                      }
+                      change: [
+                        function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.student_id = $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        },
+                        function($event) {
+                          return _vm.selectStudent(_vm.student_id)
+                        }
+                      ]
                     }
                   },
                   [
@@ -38611,7 +38770,43 @@ var render = function() {
                   : _vm._e()
               ]),
               _vm._v(" "),
-              _c("hr"),
+              _c("ul", { staticClass: "list-group list-group-flush mb-4" }, [
+                _c(
+                  "li",
+                  { staticClass: "list-group-item" },
+                  [
+                    _c("span", { staticClass: "font-weight-bold" }, [
+                      _vm._v("Course Enrolments: ")
+                    ]),
+                    _vm._v(" "),
+                    _vm._l(_vm.selectedStudentEnrolments, function(sen) {
+                      return _c("div", [
+                        _c(
+                          "span",
+                          { attrs: { id: sen.course.id + "-course" } },
+                          [_vm._v(_vm._s(sen.course.title))]
+                        ),
+                        _c("br")
+                      ])
+                    }),
+                    _vm._v(" "),
+                    _c("h6", {
+                      staticClass: "mt-4",
+                      staticStyle: { color: "red" },
+                      attrs: { id: "warning" }
+                    }),
+                    _vm._v(" "),
+                    _vm.selectedStudentEnrolments.length == 0
+                      ? _c("div", [
+                          _vm._v(
+                            "\n\t\t\t\t\t\t\t\t\tThis student is not enroled in any courses.\n\t\t\t\t\t\t\t\t"
+                          )
+                        ])
+                      : _vm._e()
+                  ],
+                  2
+                )
+              ]),
               _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
                 _c("label", { attrs: { for: "course" } }, [_vm._v("Course:")]),
@@ -38630,19 +38825,24 @@ var render = function() {
                     staticClass: "form-control",
                     attrs: { name: "course" },
                     on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.course_id = $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
-                      }
+                      change: [
+                        function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.course_id = $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        },
+                        function($event) {
+                          return _vm.checkCourse(_vm.course_id)
+                        }
+                      ]
                     }
                   },
                   [
@@ -39466,9 +39666,9 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("tr", [
-      _c("td", [_vm._v("There are no enrolments")]),
-      _vm._v(" "),
-      _c("td"),
+      _c("td", { attrs: { colspan: "2" } }, [
+        _vm._v("There are no enrolments")
+      ]),
       _vm._v(" "),
       _c("td"),
       _vm._v(" "),
@@ -39527,8 +39727,14 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("router-link", { attrs: { to: "/enrolments" } }, [
-          _c("button", { staticClass: "btn btn-primary float-right" }, [
+          _c("button", { staticClass: "btn btn-primary float-right ml-1" }, [
             _vm._v("Enrolments")
+          ])
+        ]),
+        _vm._v(" "),
+        _c("router-link", { attrs: { to: "/courses" } }, [
+          _c("button", { staticClass: "btn btn-primary float-right" }, [
+            _vm._v("Courses")
           ])
         ]),
         _vm._v(" "),
@@ -39662,7 +39868,15 @@ var render = function() {
                             ),
                             _c("br")
                           ])
-                        })
+                        }),
+                        _vm._v(" "),
+                        _vm.selectedStudentEnrolments.length == 0
+                          ? _c("div", [
+                              _vm._v(
+                                "\n\t\t\t\t\t\t\t\t\tNo Enrolments for this student.\n\t\t\t\t\t\t\t\t"
+                              )
+                            ])
+                          : _vm._e()
                       ],
                       2
                     )

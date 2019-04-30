@@ -1,21 +1,21 @@
 <template>
 
 	<div class="card mt-5">
-		<div class="card-header">
-			
-			<h5 style="display: inline-block;">Enrolments</h5>
-			<span v-if="user.name" class="float-right">Welcome, {{ user.name }}</span>
-			
 		
+		<div class="card-header">
+			<h5 style="display: inline-block;">Enrolments</h5>
+			<span v-if="user.name" class="float-right">Welcome, {{ user.name }}</span><!-- Display name -->
 		</div>
 		
 		<div class="card-body">
-				
+			
+			<!-- Row for page numbers -->
 			<div class="row">
 				<div class="col-8">
 					<button v-for="p in Math.ceil((enrolments.length / pageSize))" @click="nextPage(p)" class="btn btn-secondary pageButtons ml-2 mb-1" :id="p">{{ p }}</button>
 				</div>
 				
+				<!-- Navigation buttons -->
 				<div class="col-4">
 					<router-link to="/"><button class="btn btn-primary float-right ml-1">Home</button></router-link>
 					<router-link to="/courses"><button class="btn btn-primary float-right ml-1">Courses</button></router-link>
@@ -23,63 +23,63 @@
 					<router-link to="/createEnrolment"><button class="btn btn-success float-right ml-1 mt-1">Create Enrolment</button></router-link>
 				</div>
 			</div>
-				
-			<div class="row">
 			
-				<div class="col-8">
+			<!-- main row: table and enrolment card-->
+			<div class="row">
 				
-
-				<table class="table table-hover table-striped mt-4">
-					<thead class="thead-dark">
-						<tr>
-							<th scope="col">#</th>
-							<th scope="col">Student</th>
-							<th scope="col">Course</th>
-							<th scope="col">Status</th>
-							<th scope="col"></th>
-						</tr>
-						<tr>
-							<th scope="col">Filters:</th>
-							<th>
-								<select name="studentFilter" class="form-control" id="searchStudent" v-model="searchStudent" @change="filter(searchStudent, searchCourse, searchStatus)">
-									<option value="">Search Student</option>
-									<option v-for="s in students" :value="s.id">{{ s.name }}</option>
-								</select>
-							</th>
-							<th>
-								<select name="courseFilter" class="form-control" id="searchCourse" v-model="searchCourse" @change="filter(searchStudent, searchCourse, searchStatus)">
-									<option value="">Search Course</option>
-									<option v-for="c in courses" :value="c.id">{{ c.title }}</option>
-								</select>
-							</th>
-							<th colspan="2">
-								<select name="statusFilter" class="form-control" v-model="searchStatus" @change="filter(searchStudent, searchCourse, searchStatus)">
-									<option value="">Search Status</option>
-									<option v-for="s in statuses" :value="s">{{ s }}</option>
-								</select>
-							</th>
-<!--							<th></th>-->
-						</tr>
-					</thead>
-					<tbody v-if="enrolments.length > 0">
-						<tr v-for="i in pageSize" v-if="checkIndex(i)" :key="returnArrayIndex(i).id">
-							<th scope="row">{{ returnArrayIndex(i).id }}</th>
-							<td>{{ returnArrayIndex(i).student.name }}</td>
-							<td>{{ returnArrayIndex(i).course.title }}</td>
-							<td>{{ returnArrayIndex(i).status }}</td>
-							<td><button class="btn btn-secondary viewButtons" :id="returnArrayIndex(i).id+'-enrolment'" @click="viewEnrolment(i)">View</button></router-link></td>
-						</tr>
-					</tbody>
-					<tbody v-else>
-						<tr>
-							<td>There are no enrolments</td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-					</tbody>
-				</table>
+				<!-- Enrolment Table -->
+				<div class="col-8">
+					<table class="table table-hover table-striped mt-4">
+						<thead class="thead-dark">
+							<tr>
+								<th scope="col">#</th>
+								<th scope="col">Student</th>
+								<th scope="col">Course</th>
+								<th scope="col">Status</th>
+								<th scope="col"></th>
+							</tr>
+							
+							<!-- Filter row -->
+							<tr>
+								<th scope="col">Filters:</th>
+								<th>
+									<select name="studentFilter" class="form-control" id="searchStudent" v-model="searchStudent" @change="filter(searchStudent, searchCourse, searchStatus)">
+										<option value="">Search Student</option>
+										<option v-for="s in students" :value="s.id">{{ s.name }}</option>
+									</select>
+								</th>
+								<th>
+									<select name="courseFilter" class="form-control" id="searchCourse" v-model="searchCourse" @change="filter(searchStudent, searchCourse, searchStatus)">
+										<option value="">Search Course</option>
+										<option v-for="c in courses" :value="c.id">{{ c.title }}</option>
+									</select>
+								</th>
+								<th colspan="2">
+									<select name="statusFilter" class="form-control" v-model="searchStatus" @change="filter(searchStudent, searchCourse, searchStatus)">
+										<option value="">Search Status</option>
+										<option v-for="s in statuses" :value="s">{{ s }}</option>
+									</select>
+								</th>
+							</tr>
+						</thead>
+						<tbody v-if="enrolments.length > 0">
+							<tr v-for="i in pageSize" v-if="checkIndex(i)" :key="returnArrayIndex(i).id">
+								<th scope="row">{{ returnArrayIndex(i).id }}</th>
+								<td>{{ returnArrayIndex(i).student.name }}</td>
+								<td>{{ returnArrayIndex(i).course.title }}</td>
+								<td>{{ returnArrayIndex(i).status }}</td>
+								<td><button class="btn btn-secondary viewButtons" :id="returnArrayIndex(i).id+'-enrolment'" @click="viewEnrolment(i)">View</button></router-link></td>
+							</tr>
+						</tbody>
+						<tbody v-else>
+							<tr>
+								<td colspan="2">There are no enrolments</td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 				
 				<!-- View Current Enrolment -->
@@ -129,7 +129,7 @@
 									</div>
 									
 									<hr>
-									
+									<!-- Course -->
 									<div class="form-group">
 										<label for="course_id">Course:</label>
 										<select name="course_id" class="form-control">
@@ -140,6 +140,7 @@
 									
 									<hr>
 									
+									<!-- Date -->
 									<div class="form-group">
 										<label for="date">Date:</label>
 										<input type="date" name="date" class="form-control" :value="selectedEnrolment.date">
@@ -148,6 +149,7 @@
 									
 									<hr>
 									
+									<!-- Time -->
 									<div class="form-group">
 										<label for="time">Time:</label>
 										<input type="time" name="time" class="form-control" :value="selectedEnrolment.time">
@@ -156,6 +158,7 @@
 									
 									<hr>
 									
+									<!-- Status -->
 									<div class="form-group">
 										<label for="status">Status:</label>
 										<select name="status" class="form-control">
@@ -168,6 +171,7 @@
 									<button class="btn btn-primary">Submit</button>
 									<hr>
 								</form>
+								
 								<button class="btn btn-info mr-2 mt-3" @click="switchMode()">View</button>
 							</div>
 						</div>
@@ -182,6 +186,7 @@
 					</span>
 				</div>
 			</div>
+			<!-- END main row -->
 		</div>
 	</div>
 
@@ -192,14 +197,23 @@
         mounted() {
 			let that = this;
             console.log('View Enrolments Mounted');
-			that.getUser();
 			
+			//validate user first
+			that.getUser();
         },
 		data(){
 			return{
+				//arrays to hold data
 				enrolments: [],
 				trueEnrolments: [],
+				courses: [],
+				students: [],
+				statuses: [],
+				
+				//current enrolment object
 				selectedEnrolment: {},
+				
+				//object to hold edit data for current enrolment object
 				editEnrolment: {
 					student_id: "",
 					course_id: "",
@@ -207,24 +221,28 @@
 					time: "",
 					status: "",
 				},
+				
+				//object to hold verified user credentials
 				user:{
 					name: "",
 					email: ""
 				},
-				courses: [],
-				students: [],
-				statuses: [],
+				
 				errors: {},
 				token: localStorage.getItem("accessToken"),
 				pageSize: 10,
 				pageNumber: 1,
 				viewMode: true,
+				
+				//variables used to store filter parameters
 				searchStudent: "",
 				searchCourse: "",
 				searchStatus: ""
 			}
 		},
 		methods:{
+			
+			//gets enrolments
 			getEnrolments(){
 				let that = this;
 				
@@ -247,29 +265,97 @@
 					}
 				});
 			},
+			
+			//gets students
+			getStudents(){
+				let that = this;
+				
+				$.ajax({
+					method: 'GET',
+					url: 'api/students',
+					headers:{
+						Authorization: "Bearer " + that.token
+					},
+					success: function(response){
+//						console.log(response);
+						that.students = response;
+					},
+					error: function(response){
+						console.log(response);
+					}
+				});
+			},
+			
+			//gets courses
+			getCourses(){
+				let that = this;
+				
+				$.ajax({
+					method: 'GET',
+					url: 'api/courses',
+					headers:{
+						Authorization: "Bearer " + that.token
+					},
+					success: function(response){
+//						console.log(response);
+						that.courses = response;
+					},
+					error: function(response){
+						console.log(response);
+					}
+				});
+			},
+			
+			//gets the enum values from the status column
+			getEnum(){
+				let that = this;
+				
+				$.ajax({
+					method: 'GET',
+					url: 'api/statuses',
+					headers:{
+						Authorization: "Bearer " + that.token
+					},
+					success: function(response){
+//						console.log(response);
+						that.statuses = response;
+					},
+					error: function(response){
+						console.log(response);
+					}
+				});
+			},
+			
+			//changes the page number and updates the DOM accordingly
 			nextPage(p){
 				let that = this;
 				that.pageNumber = p;
 				that.updateJQuery();
 			},
+			
+			//returns a boolean to check if the index exists
 			checkIndex(index){
 				let that = this;
 				return that.enrolments[(index - 1) + (that.pageSize * (that.pageNumber - 1))] != undefined ? true : false;
-				
 			},
+			
+			//returns the object in this index in the enrolment array
 			returnArrayIndex(index){
 				let that = this;
 				return that.enrolments[(index - 1) + (that.pageSize * (that.pageNumber - 1))];
 			},
+			
+			//holds the current enrolment object selected
 			viewEnrolment(index){
 				let that = this;
 				that.selectedEnrolment = that.returnArrayIndex(index);
 				
-				//change the state of the view buttons to reflect which enrolment is selected
 				that.updateJQuery();
 				that.viewMode = true;
 				that.errors = {};
 			},
+			
+			//delete enrolment
 			deleteEnrolment(id){
 				let that = this;
 				
@@ -296,70 +382,16 @@
 					}
 				});
 			},
+			
+			//switches between viewing and editing an enrolment
 			switchMode(){
 				let that = this;
 				that.errors = {};
-				
-				if(that.viewMode){
-					that.viewMode = false;
-				}else{
-					that.viewMode = true;
-				}
+				that.viewMode ? that.viewMode = false : that.viewMode = true;
+
 			},
-			getStudents(){
-				let that = this;
-				
-				$.ajax({
-					method: 'GET',
-					url: 'api/students',
-					headers:{
-						Authorization: "Bearer " + that.token
-					},
-					success: function(response){
-//						console.log(response);
-						that.students = response;
-					},
-					error: function(response){
-						console.log(response);
-					}
-				});
-			},
-			getCourses(){
-				let that = this;
-				
-				$.ajax({
-					method: 'GET',
-					url: 'api/courses',
-					headers:{
-						Authorization: "Bearer " + that.token
-					},
-					success: function(response){
-//						console.log(response);
-						that.courses = response;
-					},
-					error: function(response){
-						console.log(response);
-					}
-				});
-			},
-			getEnum(){
-				let that = this;
-				
-				$.ajax({
-					method: 'GET',
-					url: 'api/statuses',
-					headers:{
-						Authorization: "Bearer " + that.token
-					},
-					success: function(response){
-//						console.log(response);
-						that.statuses = response;
-					},
-					error: function(response){
-						console.log(response);
-					}
-				});
-			},
+			
+			//submit request to update selected enrolment
 			submitEdit(id){
 				let that = this;
 				
@@ -375,10 +407,11 @@
 					success: function(response){
 //						console.log(response);
 						that.selectedEnrolment = response;
-						let realIndex = that.enrolments.findIndex(x => x.id === id);
-						that.enrolments.splice(realIndex, 1, response);
+						let realIndex = that.trueEnrolments.findIndex(x => x.id === id);
+						that.trueEnrolments.splice(realIndex, 1, response);
 						that.errors = {};
 						that.viewMode = true;
+						that.filter(that.searchStudent, that.searchCourse, that.searchStatus);
 					},
 					error: function(response){
 //						console.log(response);
@@ -386,6 +419,8 @@
 					}
 				});
 			},
+			
+			//validates if a valid user is logged in
 			getUser(){
 				let that = this;
 				
@@ -400,21 +435,24 @@
 						that.user.name = response.user.name;
 						that.user.email = response.user.email;
 						
+						//once the user is verified then get all the data
 						that.getEnrolments();
 						that.getStudents();
 						that.getCourses();
 						that.getEnum();
 					},
 					error: function(response){
-//						console.log(response);
 						alert("You are not logged in.");
 						that.$router.push("/");
 					}
 				});
 			},
+			
+			//filter out enrolments based on student, course and status
 			filter(studentId, courseId, status){
 				let that = this;
 				
+				//resets enrolments array to hold all enrolments
 				studentId == "" && courseId == "" && status == "" ? that.enrolments = that.trueEnrolments : 0;
 				
 				//re-enables selects if both are empty
@@ -478,6 +516,7 @@
 					that.enrolments = that.trueEnrolments;
 					
 					let temp = [];
+					$("#searchStudent").prop('disabled', true);
 					
 					that.enrolments.forEach(function(obj, i){
 						if(obj.status == status && obj.course_id == courseId){
@@ -490,12 +529,12 @@
 					that.enrolments = temp;
 				}
 				
-				
 				//returns enrolments with student with a specific status for all their courses
 				if(Number.isInteger(studentId) && courseId == "" && status != ""){
 					that.enrolments = that.trueEnrolments;
 					
 					let temp = [];
+					$("#searchCourse").prop('disabled', true);
 					
 					that.enrolments.forEach(function(obj, i){
 						if(obj.status == status && obj.student_id == studentId){
@@ -508,6 +547,8 @@
 					that.enrolments = temp;
 				}
 			},
+			
+			//fucntion to update all DOM elements that give user feedback
 			updateJQuery(){
 				let that = this;
 				$(document).ready(function(){

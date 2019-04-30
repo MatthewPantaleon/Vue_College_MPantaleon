@@ -4,7 +4,10 @@
 		<div class="card-header">
 			<h5 style="display: inline-block">Courses</h5>
 			
-			<router-link to="/"><button class="btn btn-primary float-right">Home</button></router-link>
+			<router-link to="/"><button class="btn btn-primary float-right ml-1">Home</button></router-link>
+			<router-link to="/enrolments"><button class="btn btn-primary float-right ml-1" v-if="user.name && user.token">Enrolments</button></router-link>
+			<router-link to="/students"><button class="btn btn-primary float-right ml-1" v-if="user.name && user.token">Students</button></router-link>
+			
 			<div class="row" v-if="user.name">
 				<div class="col">
 					Welcome, {{ user.name }}
@@ -54,16 +57,14 @@
 		data(){
 			return{
 				courses: [],
-				boo: true,
 				user:{
 					name: localStorage.getItem("name"),
-					email: localStorage.getItem("name"),
+					email: localStorage.getItem("email"),
 					token: localStorage.getItem("accessToken")
 				}
 			}
 		},
 		methods:{
-			
 			getCourses(){
 				let that = this;
 				
@@ -71,7 +72,7 @@
 					url: "api/courses",
 					method: "GET",
 					success(response){
-//						console.log(response);
+						console.log(response);
 						that.courses = response;
 					},
 					error(response){
