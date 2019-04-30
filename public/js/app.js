@@ -2280,7 +2280,7 @@ __webpack_require__.r(__webpack_exports__);
           Authorization: "Bearer " + localStorage.getItem("accessToken")
         },
         success: function success(response) {
-          console.log(response);
+          //						console.log(response);
           that.students = response;
         },
         error: function error(response) {

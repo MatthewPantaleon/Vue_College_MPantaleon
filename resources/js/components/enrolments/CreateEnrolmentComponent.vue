@@ -131,7 +131,7 @@
 						Authorization: "Bearer " + localStorage.getItem("accessToken")
 					},
 					success: function(response){
-						console.log(response);
+//						console.log(response);
 						that.students = response;
 					},
 					error: function(response){
