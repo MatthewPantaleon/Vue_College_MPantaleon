@@ -38,6 +38,28 @@
 							<th scope="col">Status</th>
 							<th scope="col"></th>
 						</tr>
+						<tr>
+							<th scope="col">Filters:</th>
+							<th>
+								<select name="studentFilter" class="form-control" id="searchStudent" v-model="searchStudent" @change="filter(searchStudent, searchCourse, searchStatus)">
+									<option value="">Search Student</option>
+									<option v-for="s in students" :value="s.id">{{ s.name }}</option>
+								</select>
+							</th>
+							<th>
+								<select name="courseFilter" class="form-control" id="searchCourse" v-model="searchCourse" @change="filter(searchStudent, searchCourse, searchStatus)">
+									<option value="">Search Course</option>
+									<option v-for="c in courses" :value="c.id">{{ c.title }}</option>
+								</select>
+							</th>
+							<th colspan="2">
+								<select name="statusFilter" class="form-control" v-model="searchStatus" @change="filter(searchStudent, searchCourse, searchStatus)">
+									<option value="">Search Status</option>
+									<option v-for="s in statuses" :value="s">{{ s }}</option>
+								</select>
+							</th>
+<!--							<th></th>-->
+						</tr>
 					</thead>
 					<tbody v-if="enrolments.length > 0">
 						<tr v-for="i in pageSize" v-if="checkIndex(i)" :key="returnArrayIndex(i).id">
@@ -51,6 +73,10 @@
 					<tbody v-else>
 						<tr>
 							<td>There are no enrolments</td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
 						</tr>
 					</tbody>
 				</table>
@@ -172,6 +198,7 @@
 		data(){
 			return{
 				enrolments: [],
+				trueEnrolments: [],
 				selectedEnrolment: {},
 				editEnrolment: {
 					student_id: "",
@@ -189,9 +216,12 @@
 				statuses: [],
 				errors: {},
 				token: localStorage.getItem("accessToken"),
-				pageSize: 15,
+				pageSize: 10,
 				pageNumber: 1,
 				viewMode: true,
+				searchStudent: "",
+				searchCourse: "",
+				searchStatus: ""
 			}
 		},
 		methods:{
@@ -207,12 +237,10 @@
 					success: function(response){
 //						console.log(response);
 						that.enrolments = response;
+						that.trueEnrolments = that.enrolments;
 						that.selectedEnrolment = response[0];
 						
-						$(document).ready(function(){
-    						$("#" + that.pageNumber).addClass("btn-primary").removeClass("btn-secondary");
-							$("#" + that.selectedEnrolment.id + "-enrolment").removeClass("btn-secondary").addClass("btn-primary").html("Selected");
-						});
+						that.updateJQuery();
 					},
 					error: function(response){
 						console.log(response);
@@ -222,20 +250,12 @@
 			nextPage(p){
 				let that = this;
 				that.pageNumber = p;
-				$(".pageButtons").removeClass("btn-primary").addClass("btn-secondary");
-				$("#" + that.pageNumber).addClass("btn-primary").removeClass("btn-secondary");
-				$(document).ready(function(){
-					$("#" + that.selectedEnrolment.id + "-enrolment").removeClass("btn-secondary").addClass("btn-primary").html("Selected");
-				});
+				that.updateJQuery();
 			},
 			checkIndex(index){
 				let that = this;
+				return that.enrolments[(index - 1) + (that.pageSize * (that.pageNumber - 1))] != undefined ? true : false;
 				
-				if(that.enrolments[(index - 1) + (that.pageSize * (that.pageNumber - 1))] != undefined){
-					return true;
-				}else{
-					return false;
-				}
 			},
 			returnArrayIndex(index){
 				let that = this;
@@ -246,15 +266,14 @@
 				that.selectedEnrolment = that.returnArrayIndex(index);
 				
 				//change the state of the view buttons to reflect which enrolment is selected
-				$(".viewButtons").removeClass("btn-primary").addClass("btn-secondary").html("View");
-				$("#" + that.selectedEnrolment.id + "-enrolment").removeClass("btn-secondary").addClass("btn-primary").html("Selected");
+				that.updateJQuery();
 				that.viewMode = true;
 				that.errors = {};
 			},
 			deleteEnrolment(id){
 				let that = this;
 				
-				if(!confirm("Delete Enrolment No#: " + id)){
+				if(!confirm("Delete Enrolment No#: " + id + "?")){
 					return;
 				}
 				
@@ -391,6 +410,112 @@
 						alert("You are not logged in.");
 						that.$router.push("/");
 					}
+				});
+			},
+			filter(studentId, courseId, status){
+				let that = this;
+				
+				studentId == "" && courseId == "" && status == "" ? that.enrolments = that.trueEnrolments : 0;
+				
+				//re-enables selects if both are empty
+				if(studentId == "" && courseId == ""){
+					$("#searchCourse").prop('disabled', false);
+					$("#searchStudent").prop('disabled', false);
+				}
+				
+				//returns enrolments with this student only
+				if(Number.isInteger(studentId) && courseId == "" && status == ""){
+					that.enrolments = that.trueEnrolments;
+					let temp = [];
+					$("#searchCourse").prop('disabled', true);
+					
+					
+					that.enrolments.forEach(function(obj, i){
+						if(obj.student_id == studentId){
+							temp.push(obj);
+						}
+					});
+					that.pageNumber = 1;
+					that.updateJQuery();
+					that.enrolments = temp;
+				}
+				
+				//returns enrolments with this course only
+				if(studentId == "" && Number.isInteger(courseId) && status == ""){
+					that.enrolments = that.trueEnrolments;
+					
+					let temp = [];
+					$("#searchStudent").prop('disabled', true);
+					
+					that.enrolments.forEach(function(obj, i){
+						if(obj.course_id == courseId){
+							temp.push(obj);
+						}
+					});
+					that.pageNumber = 1;
+					that.updateJQuery();
+					that.enrolments = temp;
+				}
+				
+				//returns enrolments with this status only
+				if(studentId == "" && courseId == "" && status != ""){
+					that.enrolments = that.trueEnrolments;
+					
+					let temp = [];
+					
+					that.enrolments.forEach(function(obj, i){
+						if(obj.status == status){
+							temp.push(obj);
+						}
+					});
+					that.pageNumber = 1;
+					that.updateJQuery();
+					that.enrolments = temp;
+				}
+				
+				//returns enrolments with course with a specific status
+				if(studentId == "" && Number.isInteger(courseId) && status != ""){
+					that.enrolments = that.trueEnrolments;
+					
+					let temp = [];
+					
+					that.enrolments.forEach(function(obj, i){
+						if(obj.status == status && obj.course_id == courseId){
+							temp.push(obj);
+						}
+					});
+					that.pageNumber = 1;
+					
+					that.updateJQuery();
+					that.enrolments = temp;
+				}
+				
+				
+				//returns enrolments with student with a specific status for all their courses
+				if(Number.isInteger(studentId) && courseId == "" && status != ""){
+					that.enrolments = that.trueEnrolments;
+					
+					let temp = [];
+					
+					that.enrolments.forEach(function(obj, i){
+						if(obj.status == status && obj.student_id == studentId){
+							temp.push(obj);
+						}
+					});
+					that.pageNumber = 1;
+					
+					that.updateJQuery();
+					that.enrolments = temp;
+				}
+			},
+			updateJQuery(){
+				let that = this;
+				$(document).ready(function(){
+					$(".viewButtons").addClass("btn-secondary").removeClass("btn-primary").html("View");
+					$("#" + that.selectedEnrolment.id + "-enrolment").removeClass("btn-secondary").addClass("btn-primary").html("Selected");
+					
+					$(".pageButtons").addClass("btn-secondary").removeClass("btn-primary");
+					$("#" + that.pageNumber).addClass("btn-primary").removeClass("btn-secondary");
 				});
 			}
 		}

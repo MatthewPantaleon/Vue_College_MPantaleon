@@ -4,7 +4,8 @@
 		<div class="card-header">
 			<h5 style="display: inline-block">Students</h5>
 			
-			<router-link to="/"><button class="btn btn-primary float-right">Home</button></router-link>
+			<router-link to="/"><button class="btn btn-primary float-right ml-1">Home</button></router-link>
+			<router-link to="/enrolments"><button class="btn btn-primary float-right">Enrolments</button></router-link>
 			<div class="row" v-if="user.name">
 				<div class="col">
 					Welcome, {{ user.name }}
@@ -13,20 +14,62 @@
 		</div>
 
 		<div class="card-body">
-			<table class="table table-hover table-striped">
-				<thead class="thead-dark">
-					<tr>
-						<th>#</th>
-					</tr>
-				</thead>
-				
-				<tbody>
-					<tr v-for="s in students">
-						<td>{{ s.id }}</td>
-					</tr>
-				</tbody>
-			
-			</table>
+			<div class="row">
+				<div class="col">
+					<button v-for="p in Math.ceil((students.length / pageSize))" @click="nextPage(p)" class="btn btn-secondary pageButtons ml-2 mb-1" :id="p">{{ p }}</button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-8">
+					<table class="table table-hover table-striped">
+						<thead class="thead-dark">
+							<tr>
+								<th>#</th>
+								<th>Name</th>
+								<th>Email</th>
+								<th></th>
+							</tr>
+						</thead>
+
+						<tbody>
+							<tr v-for="i in pageSize" v-if="checkIndex(i)" :key="returnArrayIndex(i).id">
+								<td>{{ returnArrayIndex(i).id }}</td>
+								<td>{{ returnArrayIndex(i).name }}</td>
+								<td>{{ returnArrayIndex(i).email }}</td>
+								<td><button class="btn btn-secondary viewButtons" :id="returnArrayIndex(i).id + '-student'" @click="viewStudent(returnArrayIndex(i).id)" >View</button></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-4">
+					<div class="card" v-if="Object.keys(selectedStudent).length != 0">
+						<div class="card-header">
+							<h5>Student No#: {{ selectedStudent.id }}</h5>
+						</div>
+						<div class="card-body">
+							<ul class="list-group list-group-flush" >
+								<li class="list-group-item">
+									<span class="font-weight-bold">Name: </span>{{ selectedStudent.name }}<br>
+									<span class="font-weight-bold">Email: </span>{{ selectedStudent.email }}<br>
+									<span class="font-weight-bold">Phone: </span>{{ selectedStudent.phone }}<br>
+									<span class="font-weight-bold">Address: </span>{{ selectedStudent.address }}<br>
+								</li>
+								<li class="list-group-item">
+									<span class="font-weight-bold">Course Enrolments: </span>
+									<div v-for="sen in selectedStudentEnrolments">
+										{{ sen.course.title }}<br>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="card" v-else>
+						<div class="card-header">
+							<h5>No Student Selected</h5>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -43,12 +86,15 @@
 		data(){
 			return{
 				students: [],
+				selectedStudent:{},
+				selectedStudentEnrolments:[],
 				user:{
 					name: localStorage.getItem("name"),
 					token: localStorage.getItem("accessToken"),
 					email: localStorage.getItem("email")
-				}
-				
+				},
+				pageSize: 7,
+				pageNumber: 1
 			}
 		},
 		methods:{
@@ -64,11 +110,29 @@
 					success: function(response){
 						console.log(response);
 						that.students = response;
+						that.selectedStudent = response[0];
+						that.selectedStudentEnrolments = response[0].enrolments;
+						
+						$(document).ready(function(){
+    						$("#" + that.pageNumber).addClass("btn-primary").removeClass("btn-secondary");
+							$("#" + that.selectedStudent.id + "-student").removeClass("btn-secondary").addClass("btn-primary").html("Selected");
+						});
+						
 					},
 					error: function(response){
 						
 					}
 				});
+			},
+			viewStudent(id){
+				let that = this;
+				
+				let realIndex = that.students.findIndex(x => x.id === id);
+				that.selectedStudent = that.students[realIndex];
+				that.selectedStudentEnrolments = that.selectedStudent.enrolments;
+				
+				$(".viewButtons").removeClass("btn-primary").addClass("btn-secondary").html("View");
+				$("#" + that.selectedStudent.id + "-student").removeClass("btn-secondary").addClass("btn-primary").html("Selected");
 			},
 			getUser(){
 				let that = this;
@@ -90,6 +154,25 @@
 						alert("You are not logged in.");
 						that.$router.push("/");
 					}
+				});
+			},
+			checkIndex(index){
+				let that = this;
+				return that.students[(index - 1) + (that.pageSize * (that.pageNumber - 1))] != undefined ? true : false;
+			},
+			returnArrayIndex(index){
+				let that = this;
+				return that.students[(index - 1) + (that.pageSize * (that.pageNumber - 1))];
+			},
+			nextPage(p){
+				let that = this;
+				that.pageNumber = p;
+				
+				$(".pageButtons").removeClass("btn-primary").addClass("btn-secondary");
+				$("#" + that.pageNumber).addClass("btn-primary").removeClass("btn-secondary");
+				
+				$(document).ready(function(){
+					$("#" + that.selectedStudent.id + "-student").removeClass("btn-secondary").addClass("btn-primary").html("Selected");
 				});
 			}
 		}

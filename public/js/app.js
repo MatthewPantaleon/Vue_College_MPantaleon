@@ -2498,6 +2498,32 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     var that = this;
@@ -2507,6 +2533,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       enrolments: [],
+      trueEnrolments: [],
       selectedEnrolment: {},
       editEnrolment: {
         student_id: "",
@@ -2524,9 +2551,12 @@ __webpack_require__.r(__webpack_exports__);
       statuses: [],
       errors: {},
       token: localStorage.getItem("accessToken"),
-      pageSize: 15,
+      pageSize: 10,
       pageNumber: 1,
-      viewMode: true
+      viewMode: true,
+      searchStudent: "",
+      searchCourse: "",
+      searchStatus: ""
     };
   },
   methods: {
@@ -2541,11 +2571,9 @@ __webpack_require__.r(__webpack_exports__);
         success: function success(response) {
           //						console.log(response);
           that.enrolments = response;
+          that.trueEnrolments = that.enrolments;
           that.selectedEnrolment = response[0];
-          $(document).ready(function () {
-            $("#" + that.pageNumber).addClass("btn-primary").removeClass("btn-secondary");
-            $("#" + that.selectedEnrolment.id + "-enrolment").removeClass("btn-secondary").addClass("btn-primary").html("Selected");
-          });
+          that.updateJQuery();
         },
         error: function error(response) {
           console.log(response);
@@ -2555,20 +2583,11 @@ __webpack_require__.r(__webpack_exports__);
     nextPage: function nextPage(p) {
       var that = this;
       that.pageNumber = p;
-      $(".pageButtons").removeClass("btn-primary").addClass("btn-secondary");
-      $("#" + that.pageNumber).addClass("btn-primary").removeClass("btn-secondary");
-      $(document).ready(function () {
-        $("#" + that.selectedEnrolment.id + "-enrolment").removeClass("btn-secondary").addClass("btn-primary").html("Selected");
-      });
+      that.updateJQuery();
     },
     checkIndex: function checkIndex(index) {
       var that = this;
-
-      if (that.enrolments[index - 1 + that.pageSize * (that.pageNumber - 1)] != undefined) {
-        return true;
-      } else {
-        return false;
-      }
+      return that.enrolments[index - 1 + that.pageSize * (that.pageNumber - 1)] != undefined ? true : false;
     },
     returnArrayIndex: function returnArrayIndex(index) {
       var that = this;
@@ -2578,15 +2597,14 @@ __webpack_require__.r(__webpack_exports__);
       var that = this;
       that.selectedEnrolment = that.returnArrayIndex(index); //change the state of the view buttons to reflect which enrolment is selected
 
-      $(".viewButtons").removeClass("btn-primary").addClass("btn-secondary").html("View");
-      $("#" + that.selectedEnrolment.id + "-enrolment").removeClass("btn-secondary").addClass("btn-primary").html("Selected");
+      that.updateJQuery();
       that.viewMode = true;
       that.errors = {};
     },
     deleteEnrolment: function deleteEnrolment(id) {
       var that = this;
 
-      if (!confirm("Delete Enrolment No#: " + id)) {
+      if (!confirm("Delete Enrolment No#: " + id + "?")) {
         return;
       }
 
@@ -2721,6 +2739,96 @@ __webpack_require__.r(__webpack_exports__);
           that.$router.push("/");
         }
       });
+    },
+    filter: function filter(studentId, courseId, status) {
+      var that = this;
+      studentId == "" && courseId == "" && status == "" ? that.enrolments = that.trueEnrolments : 0; //re-enables selects if both are empty
+
+      if (studentId == "" && courseId == "") {
+        $("#searchCourse").prop('disabled', false);
+        $("#searchStudent").prop('disabled', false);
+      } //returns enrolments with this student only
+
+
+      if (Number.isInteger(studentId) && courseId == "" && status == "") {
+        that.enrolments = that.trueEnrolments;
+        var temp = [];
+        $("#searchCourse").prop('disabled', true);
+        that.enrolments.forEach(function (obj, i) {
+          if (obj.student_id == studentId) {
+            temp.push(obj);
+          }
+        });
+        that.pageNumber = 1;
+        that.updateJQuery();
+        that.enrolments = temp;
+      } //returns enrolments with this course only
+
+
+      if (studentId == "" && Number.isInteger(courseId) && status == "") {
+        that.enrolments = that.trueEnrolments;
+        var _temp = [];
+        $("#searchStudent").prop('disabled', true);
+        that.enrolments.forEach(function (obj, i) {
+          if (obj.course_id == courseId) {
+            _temp.push(obj);
+          }
+        });
+        that.pageNumber = 1;
+        that.updateJQuery();
+        that.enrolments = _temp;
+      } //returns enrolments with this status only
+
+
+      if (studentId == "" && courseId == "" && status != "") {
+        that.enrolments = that.trueEnrolments;
+        var _temp2 = [];
+        that.enrolments.forEach(function (obj, i) {
+          if (obj.status == status) {
+            _temp2.push(obj);
+          }
+        });
+        that.pageNumber = 1;
+        that.updateJQuery();
+        that.enrolments = _temp2;
+      } //returns enrolments with course with a specific status
+
+
+      if (studentId == "" && Number.isInteger(courseId) && status != "") {
+        that.enrolments = that.trueEnrolments;
+        var _temp3 = [];
+        that.enrolments.forEach(function (obj, i) {
+          if (obj.status == status && obj.course_id == courseId) {
+            _temp3.push(obj);
+          }
+        });
+        that.pageNumber = 1;
+        that.updateJQuery();
+        that.enrolments = _temp3;
+      } //returns enrolments with student with a specific status for all their courses
+
+
+      if (Number.isInteger(studentId) && courseId == "" && status != "") {
+        that.enrolments = that.trueEnrolments;
+        var _temp4 = [];
+        that.enrolments.forEach(function (obj, i) {
+          if (obj.status == status && obj.student_id == studentId) {
+            _temp4.push(obj);
+          }
+        });
+        that.pageNumber = 1;
+        that.updateJQuery();
+        that.enrolments = _temp4;
+      }
+    },
+    updateJQuery: function updateJQuery() {
+      var that = this;
+      $(document).ready(function () {
+        $(".viewButtons").addClass("btn-secondary").removeClass("btn-primary").html("View");
+        $("#" + that.selectedEnrolment.id + "-enrolment").removeClass("btn-secondary").addClass("btn-primary").html("Selected");
+        $(".pageButtons").addClass("btn-secondary").removeClass("btn-primary");
+        $("#" + that.pageNumber).addClass("btn-primary").removeClass("btn-secondary");
+      });
     }
   }
 });
@@ -2771,6 +2879,49 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     var that = this;
@@ -2780,11 +2931,15 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       students: [],
+      selectedStudent: {},
+      selectedStudentEnrolments: [],
       user: {
         name: localStorage.getItem("name"),
         token: localStorage.getItem("accessToken"),
         email: localStorage.getItem("email")
-      }
+      },
+      pageSize: 7,
+      pageNumber: 1
     };
   },
   methods: {
@@ -2799,9 +2954,25 @@ __webpack_require__.r(__webpack_exports__);
         success: function success(response) {
           console.log(response);
           that.students = response;
+          that.selectedStudent = response[0];
+          that.selectedStudentEnrolments = response[0].enrolments;
+          $(document).ready(function () {
+            $("#" + that.pageNumber).addClass("btn-primary").removeClass("btn-secondary");
+            $("#" + that.selectedStudent.id + "-student").removeClass("btn-secondary").addClass("btn-primary").html("Selected");
+          });
         },
         error: function error(response) {}
       });
+    },
+    viewStudent: function viewStudent(id) {
+      var that = this;
+      var realIndex = that.students.findIndex(function (x) {
+        return x.id === id;
+      });
+      that.selectedStudent = that.students[realIndex];
+      that.selectedStudentEnrolments = that.selectedStudent.enrolments;
+      $(".viewButtons").removeClass("btn-primary").addClass("btn-secondary").html("View");
+      $("#" + that.selectedStudent.id + "-student").removeClass("btn-secondary").addClass("btn-primary").html("Selected");
     },
     getUser: function getUser() {
       var that = this;
@@ -2821,6 +2992,23 @@ __webpack_require__.r(__webpack_exports__);
           alert("You are not logged in.");
           that.$router.push("/");
         }
+      });
+    },
+    checkIndex: function checkIndex(index) {
+      var that = this;
+      return that.students[index - 1 + that.pageSize * (that.pageNumber - 1)] != undefined ? true : false;
+    },
+    returnArrayIndex: function returnArrayIndex(index) {
+      var that = this;
+      return that.students[index - 1 + that.pageSize * (that.pageNumber - 1)];
+    },
+    nextPage: function nextPage(p) {
+      var that = this;
+      that.pageNumber = p;
+      $(".pageButtons").removeClass("btn-primary").addClass("btn-secondary");
+      $("#" + that.pageNumber).addClass("btn-primary").removeClass("btn-secondary");
+      $(document).ready(function () {
+        $("#" + that.selectedStudent.id + "-student").removeClass("btn-secondary").addClass("btn-primary").html("Selected");
       });
     }
   }
@@ -38710,7 +38898,175 @@ var render = function() {
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "col-8" }, [
           _c("table", { staticClass: "table table-hover table-striped mt-4" }, [
-            _vm._m(0),
+            _c("thead", { staticClass: "thead-dark" }, [
+              _vm._m(0),
+              _vm._v(" "),
+              _c("tr", [
+                _c("th", { attrs: { scope: "col" } }, [_vm._v("Filters:")]),
+                _vm._v(" "),
+                _c("th", [
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.searchStudent,
+                          expression: "searchStudent"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { name: "studentFilter", id: "searchStudent" },
+                      on: {
+                        change: [
+                          function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.searchStudent = $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          },
+                          function($event) {
+                            return _vm.filter(
+                              _vm.searchStudent,
+                              _vm.searchCourse,
+                              _vm.searchStatus
+                            )
+                          }
+                        ]
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { value: "" } }, [
+                        _vm._v("Search Student")
+                      ]),
+                      _vm._v(" "),
+                      _vm._l(_vm.students, function(s) {
+                        return _c("option", { domProps: { value: s.id } }, [
+                          _vm._v(_vm._s(s.name))
+                        ])
+                      })
+                    ],
+                    2
+                  )
+                ]),
+                _vm._v(" "),
+                _c("th", [
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.searchCourse,
+                          expression: "searchCourse"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { name: "courseFilter", id: "searchCourse" },
+                      on: {
+                        change: [
+                          function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.searchCourse = $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          },
+                          function($event) {
+                            return _vm.filter(
+                              _vm.searchStudent,
+                              _vm.searchCourse,
+                              _vm.searchStatus
+                            )
+                          }
+                        ]
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { value: "" } }, [
+                        _vm._v("Search Course")
+                      ]),
+                      _vm._v(" "),
+                      _vm._l(_vm.courses, function(c) {
+                        return _c("option", { domProps: { value: c.id } }, [
+                          _vm._v(_vm._s(c.title))
+                        ])
+                      })
+                    ],
+                    2
+                  )
+                ]),
+                _vm._v(" "),
+                _c("th", { attrs: { colspan: "2" } }, [
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.searchStatus,
+                          expression: "searchStatus"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { name: "statusFilter" },
+                      on: {
+                        change: [
+                          function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.searchStatus = $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          },
+                          function($event) {
+                            return _vm.filter(
+                              _vm.searchStudent,
+                              _vm.searchCourse,
+                              _vm.searchStatus
+                            )
+                          }
+                        ]
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { value: "" } }, [
+                        _vm._v("Search Status")
+                      ]),
+                      _vm._v(" "),
+                      _vm._l(_vm.statuses, function(s) {
+                        return _c("option", { domProps: { value: s } }, [
+                          _vm._v(_vm._s(s))
+                        ])
+                      })
+                    ],
+                    2
+                  )
+                ])
+              ])
+            ]),
             _vm._v(" "),
             _vm.enrolments.length > 0
               ? _c(
@@ -39093,25 +39449,33 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("thead", { staticClass: "thead-dark" }, [
-      _c("tr", [
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("#")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Student")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Course")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Status")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } })
-      ])
+    return _c("tr", [
+      _c("th", { attrs: { scope: "col" } }, [_vm._v("#")]),
+      _vm._v(" "),
+      _c("th", { attrs: { scope: "col" } }, [_vm._v("Student")]),
+      _vm._v(" "),
+      _c("th", { attrs: { scope: "col" } }, [_vm._v("Course")]),
+      _vm._v(" "),
+      _c("th", { attrs: { scope: "col" } }, [_vm._v("Status")]),
+      _vm._v(" "),
+      _c("th", { attrs: { scope: "col" } })
     ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("tr", [_c("td", [_vm._v("There are no enrolments")])])
+    return _c("tr", [
+      _c("td", [_vm._v("There are no enrolments")]),
+      _vm._v(" "),
+      _c("td"),
+      _vm._v(" "),
+      _c("td"),
+      _vm._v(" "),
+      _c("td"),
+      _vm._v(" "),
+      _c("td")
+    ])
   },
   function() {
     var _vm = this
@@ -39157,8 +39521,14 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("router-link", { attrs: { to: "/" } }, [
-          _c("button", { staticClass: "btn btn-primary float-right" }, [
+          _c("button", { staticClass: "btn btn-primary float-right ml-1" }, [
             _vm._v("Home")
+          ])
+        ]),
+        _vm._v(" "),
+        _c("router-link", { attrs: { to: "/enrolments" } }, [
+          _c("button", { staticClass: "btn btn-primary float-right" }, [
+            _vm._v("Enrolments")
           ])
         ]),
         _vm._v(" "),
@@ -39176,16 +39546,131 @@ var render = function() {
     ),
     _vm._v(" "),
     _c("div", { staticClass: "card-body" }, [
-      _c("table", { staticClass: "table table-hover table-striped" }, [
-        _vm._m(0),
-        _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
         _c(
-          "tbody",
-          _vm._l(_vm.students, function(s) {
-            return _c("tr", [_c("td", [_vm._v(_vm._s(s.id))])])
+          "div",
+          { staticClass: "col" },
+          _vm._l(Math.ceil(_vm.students.length / _vm.pageSize), function(p) {
+            return _c(
+              "button",
+              {
+                staticClass: "btn btn-secondary pageButtons ml-2 mb-1",
+                attrs: { id: p },
+                on: {
+                  click: function($event) {
+                    return _vm.nextPage(p)
+                  }
+                }
+              },
+              [_vm._v(_vm._s(p))]
+            )
           }),
           0
         )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-8" }, [
+          _c("table", { staticClass: "table table-hover table-striped" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              _vm._l(_vm.pageSize, function(i) {
+                return _vm.checkIndex(i)
+                  ? _c("tr", { key: _vm.returnArrayIndex(i).id }, [
+                      _c("td", [_vm._v(_vm._s(_vm.returnArrayIndex(i).id))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(_vm.returnArrayIndex(i).name))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(_vm.returnArrayIndex(i).email))]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-secondary viewButtons",
+                            attrs: {
+                              id: _vm.returnArrayIndex(i).id + "-student"
+                            },
+                            on: {
+                              click: function($event) {
+                                _vm.viewStudent(_vm.returnArrayIndex(i).id)
+                              }
+                            }
+                          },
+                          [_vm._v("View")]
+                        )
+                      ])
+                    ])
+                  : _vm._e()
+              }),
+              0
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-4" }, [
+          Object.keys(_vm.selectedStudent).length != 0
+            ? _c("div", { staticClass: "card" }, [
+                _c("div", { staticClass: "card-header" }, [
+                  _c("h5", [
+                    _vm._v("Student No#: " + _vm._s(_vm.selectedStudent.id))
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "card-body" }, [
+                  _c("ul", { staticClass: "list-group list-group-flush" }, [
+                    _c("li", { staticClass: "list-group-item" }, [
+                      _c("span", { staticClass: "font-weight-bold" }, [
+                        _vm._v("Name: ")
+                      ]),
+                      _vm._v(_vm._s(_vm.selectedStudent.name)),
+                      _c("br"),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "font-weight-bold" }, [
+                        _vm._v("Email: ")
+                      ]),
+                      _vm._v(_vm._s(_vm.selectedStudent.email)),
+                      _c("br"),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "font-weight-bold" }, [
+                        _vm._v("Phone: ")
+                      ]),
+                      _vm._v(_vm._s(_vm.selectedStudent.phone)),
+                      _c("br"),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "font-weight-bold" }, [
+                        _vm._v("Address: ")
+                      ]),
+                      _vm._v(_vm._s(_vm.selectedStudent.address)),
+                      _c("br")
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "li",
+                      { staticClass: "list-group-item" },
+                      [
+                        _c("span", { staticClass: "font-weight-bold" }, [
+                          _vm._v("Course Enrolments: ")
+                        ]),
+                        _vm._v(" "),
+                        _vm._l(_vm.selectedStudentEnrolments, function(sen) {
+                          return _c("div", [
+                            _vm._v(
+                              "\n\t\t\t\t\t\t\t\t\t" + _vm._s(sen.course.title)
+                            ),
+                            _c("br")
+                          ])
+                        })
+                      ],
+                      2
+                    )
+                  ])
+                ])
+              ])
+            : _c("div", { staticClass: "card" }, [_vm._m(1)])
+        ])
       ])
     ])
   ])
@@ -39196,7 +39681,23 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("thead", { staticClass: "thead-dark" }, [
-      _c("tr", [_c("th", [_vm._v("#")])])
+      _c("tr", [
+        _c("th", [_vm._v("#")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Name")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Email")]),
+        _vm._v(" "),
+        _c("th")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h5", [_vm._v("No Student Selected")])
     ])
   }
 ]
@@ -54621,8 +55122,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\User\Desktop\Other\college_vue\Vue_College_MPantaleon\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\User\Desktop\Other\college_vue\Vue_College_MPantaleon\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\N00173936\Desktop\College_CA2\Vue_College_MPantaleon\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\N00173936\Desktop\College_CA2\Vue_College_MPantaleon\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
