@@ -2845,7 +2845,8 @@ __webpack_require__.r(__webpack_exports__);
     filter: function filter(studentId, courseId, status) {
       var that = this; //resets enrolments array to hold all enrolments
 
-      studentId == "" && courseId == "" && status == "" ? that.enrolments = that.trueEnrolments : 0; //re-enables selects if both are empty
+      studentId == "" && courseId == "" && status == "" ? that.enrolments = that.trueEnrolments : 0;
+      that.updateJQuery(); //re-enables selects if both are empty
 
       if (studentId == "" && courseId == "") {
         $("#searchCourse").prop('disabled', false);

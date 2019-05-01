@@ -454,6 +454,7 @@
 				
 				//resets enrolments array to hold all enrolments
 				studentId == "" && courseId == "" && status == "" ? that.enrolments = that.trueEnrolments : 0;
+				that.updateJQuery();
 				
 				//re-enables selects if both are empty
 				if(studentId == "" && courseId == ""){
