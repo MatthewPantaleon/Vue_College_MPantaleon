@@ -2775,6 +2775,11 @@ __webpack_require__.r(__webpack_exports__);
           that.enrolments.splice(realIndex, 1);
           that.selectedEnrolment = {};
           alert(response.message);
+
+          if (that.enrolments.length % that.pageSize == 0) {
+            that.pageNumber -= 1;
+            that.updateJQuery();
+          }
         },
         error: function error(response) {
           console.log(response);

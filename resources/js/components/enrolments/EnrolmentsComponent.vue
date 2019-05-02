@@ -376,6 +376,11 @@
 						that.enrolments.splice(realIndex, 1);
 						that.selectedEnrolment = {};
 						alert(response.message);
+						
+						if(that.enrolments.length % that.pageSize == 0){
+							that.pageNumber -= 1;
+							that.updateJQuery();
+						}
 					},
 					error: function(response){
 						console.log(response);
