@@ -41,6 +41,8 @@ import ViewStudentsComponent from './components/students/ViewStudentsComponent.v
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
+
+//make Vue use Vue-router
 Vue.use(VueRouter);
 
 const routes = [
@@ -77,10 +79,14 @@ const routes = [
 
 ];
 
+
+//create compiled routes
 const router = new VueRouter({
 	routes: routes
 });
 
+
+//integrate routes into vue application
 const app = new Vue({
     el: '#app',
 	router: router

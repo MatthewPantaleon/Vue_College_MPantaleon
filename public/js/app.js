@@ -54754,6 +54754,7 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js"); //window.
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
+//make Vue use Vue-router
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]);
 var routes = [{
@@ -54779,10 +54780,12 @@ var routes = [{
 }, {
   path: '/students',
   component: _components_students_ViewStudentsComponent_vue__WEBPACK_IMPORTED_MODULE_8__["default"]
-}];
+}]; //create compiled routes
+
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   routes: routes
-});
+}); //integrate routes into vue application
+
 var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   el: '#app',
   router: router
