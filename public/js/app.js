@@ -54754,7 +54754,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODU
 var routes = [{
   path: '/',
   components: {
-    welcomeComponent: _components_WelcomeComponent_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
+    "default": _components_WelcomeComponent_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
   }
 }, {
   path: '/courses',

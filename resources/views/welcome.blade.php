@@ -64,7 +64,6 @@
 
 
 					<div id="app">
-						<router-view name="welcomeComponent"></router-view>
 						<router-view></router-view>
 					</div>
 					

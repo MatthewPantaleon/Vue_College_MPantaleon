@@ -47,7 +47,7 @@ const routes = [
 	{
 		path: '/',
 		components:{
-			welcomeComponent: WelcomeComponent
+			default: WelcomeComponent,
 		}
 	},
 	{
