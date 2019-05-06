@@ -68,7 +68,7 @@
 								<td>{{ returnArrayIndex(i).student.name }}</td>
 								<td>{{ returnArrayIndex(i).course.title }}</td>
 								<td>{{ returnArrayIndex(i).status }}</td>
-								<td><button class="btn btn-secondary viewButtons" :id="returnArrayIndex(i).id+'-enrolment'" @click="viewEnrolment(i)">View</button></router-link></td>
+								<td><button class="btn btn-secondary viewButtons" :id="returnArrayIndex(i).id+'-enrolment'" @click="viewEnrolment(i)">View</button></td>
 							</tr>
 						</tbody>
 						<tbody v-else>

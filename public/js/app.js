@@ -55352,8 +55352,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\N00173936\Desktop\College_CA2\Vue_College_MPantaleon\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\N00173936\Desktop\College_CA2\Vue_College_MPantaleon\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\User\Desktop\Other\college_vue\Vue_College_MPantaleon\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\User\Desktop\Other\college_vue\Vue_College_MPantaleon\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
